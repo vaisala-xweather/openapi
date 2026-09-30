@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Xweather Weather API reference and OpenAPI downloads for API clients and LLM tools." />
+    <title>Xweather Weather API</title>
+    <!-- brand.css is the Xweather brand foundation, copied byte-identical. It loads Vaisala Sans from xweather.com. -->
+    <link rel="preconnect" href="https://www.xweather.com" crossorigin />
+    <link rel="stylesheet" href="./assets/brand.css" />
+    <link rel="stylesheet" href="./assets/xweather-scalar.css" />
+  </head>
+  <body>
+    <a class="xwb-skip-link" href="#app">Skip to content</a>
+    <header class="xwb-custom-masthead">
+      <div class="xwb-custom-identity">
+        <span class="xwb-wordmark" role="img" aria-label="Xweather"></span>
+        <span class="xwb-custom-product">Weather API reference</span>
+      </div>
+      <nav class="xwb-custom-links" aria-label="Specification downloads and documentation">
+        <ul class="xwb-custom-group" aria-label="Download a specification">
+          <li class="xwb-custom-group-name" aria-hidden="true">Download</li>
+          <li><a href="./weather-api.yaml" download>OpenAPI 3.2</a></li>
+          <li><a href="./weather-api-3.1.yaml" download>OpenAPI 3.1</a></li>
+        </ul>
+        <ul class="xwb-custom-group" aria-label="Resources">
+          <li><a href="https://www.xweather.com/docs/weather-api">API guides</a></li>
+          <li><a href="https://github.com/vaisala-xweather/openapi">GitHub</a></li>
+          <li><a href="./LICENSE">MIT license</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main id="app" tabindex="-1"></main>
+    <noscript>
+      <p class="xwb-custom-fallback">Enable JavaScript to view the interactive reference, or use the specification downloads above.</p>
+    </noscript>
+    <footer class="xwb-custom-footer">
+      <span class="xwb-mark" role="img" aria-label="Xweather"></span>
+      <span>Copyright 2026 Vaisala Xweather</span>
+    </footer>
+
+    <!-- Keep the viewer version pinned so updates can be reviewed with the spec. -->
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.69.0"></script>
+    <script type="module">
+      import { shortenNavigationLabels } from './navigation.mjs'
+
+      // Scalar marks the theme on <body>; brand.css resolves its tokens from
+      // <html data-theme>. Mirror one onto the other so both agree.
+      function syncBrandTheme() {
+        const { classList } = document.body
+        if (classList.contains('dark-mode')) document.documentElement.dataset.theme = 'dark'
+        else if (classList.contains('light-mode')) document.documentElement.dataset.theme = 'light'
+      }
+      new MutationObserver(syncBrandTheme).observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class'],
+      })
+
+      const app = document.querySelector('#app')
+      if (window.Scalar) {
+        shortenNavigationLabels(app)
+        Scalar.createApiReference('#app', {
+          url: './weather-api.yaml',
+          // The Xweather theme in assets/xweather-scalar.css replaces Scalar's.
+          theme: 'none',
+          withDefaultFonts: false,
+          // The theme follows the reader's system setting, with no visible switcher.
+          hideDarkModeToggle: true,
+        })
+        syncBrandTheme()
+      } else {
+        app.className = 'xwb-custom-fallback'
+        app.textContent =
+          'The interactive reference could not load. You can download the specifications using the links above.'
+      }
+    </script>
+  </body>
+</html>

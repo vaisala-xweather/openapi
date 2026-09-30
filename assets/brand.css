@@ -1,0 +1,2573 @@
+/* ==========================================================================
+   Xweather Brand Foundation (XWB)
+   The published CSS API for Xweather-authored documents and artifacts.
+
+   Pair with design.md, which carries the judgment this file cannot encode.
+   Public API = the class and token names documented in design.md.
+   Never target an undocumented selector; never redeclare an --xwb-* token.
+
+   Brand: Xweather (Vaisala)
+   Base grid: 4px
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TYPEFACES
+
+   REPOINT BEFORE WIDE ROLLOUT
+   ---------------------------
+   These URLs are Next.js build artifacts from xweather.com. They are public
+   (access-control-allow-origin: *) and immutable, but the filename hash
+   rotates whenever the website rebuilds its font assets. When that happens
+   these faces silently fall back to Arial metrics.
+   Host stable copies at a permanent path and replace the five URLs below.
+
+   Vaisala Sans ships THREE weights only: 300, 400, 700.
+   There is no 500. Do not ask for one -- the browser will synthesize a
+   counterfeit and the type will look wrong at large sizes.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: "Vaisala Sans";
+  src: url("https://www.xweather.com/_next/static/media/VaisalaSans_Light-s.p.01evyxp346aga.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vaisala Sans";
+  src: url("https://www.xweather.com/_next/static/media/VaisalaSans_Regular-s.p.0wgj1xx8dbebo.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vaisala Sans";
+  src: url("https://www.xweather.com/_next/static/media/VaisalaSans_Bold-s.p.05_9pmf35ss5d.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vaisala Sans Mono";
+  src: url("https://www.xweather.com/_next/static/media/VaisalaSans_Mono-s.p.0l1t1lmjfquwn.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Vaisala Sans Condensed";
+  src: url("https://www.xweather.com/_next/static/media/VaisalaSans_Condensed-s.p.00acgvmb32geg.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Metric-matched fallbacks. Keep these: they hold layout stable when the
+   licensed faces are unavailable, so a fallback render is merely plainer,
+   never reflowed. Values mirror xweather.com's own overrides. */
+@font-face {
+  font-family: "Vaisala Sans Fallback";
+  src: local("Arial");
+  ascent-override: 93.46%;
+  descent-override: 30.47%;
+  line-gap-override: 0%;
+  size-adjust: 107%;
+}
+@font-face {
+  font-family: "Vaisala Sans Mono Fallback";
+  src: local("Arial");
+  ascent-override: 71.3%;
+  descent-override: 23.24%;
+  line-gap-override: 0%;
+  size-adjust: 140.26%;
+}
+@font-face {
+  font-family: "Vaisala Sans Condensed Fallback";
+  src: local("Arial");
+  ascent-override: 113%;
+  descent-override: 36.84%;
+  line-gap-override: 0%;
+  size-adjust: 88.5%;
+}
+
+/* --------------------------------------------------------------------------
+   2. TOKENS -- LIGHT (default)
+
+   Raw brand ramps are verified against xweather.com's shipped stylesheet.
+   Semantic tokens are what page CSS reads. Never read a raw ramp token
+   directly when a semantic token exists.
+   -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  /* --- Raw ramp: Xweather Black (the brand's primary neutral) --- */
+  --xwb-black-0:   #ffffff;
+  --xwb-black-50:  #f2f4f6;
+  --xwb-black-100: #d9e0e6;
+  --xwb-black-200: #a6b3c0;
+  --xwb-black-300: #7d899c;
+  --xwb-black-400: #556079;
+  --xwb-black-500: #2d3b56;
+  --xwb-black-600: #25304b;
+  --xwb-black-700: #1b2336;
+  --xwb-black-800: #121b25;
+  --xwb-black-900: #09151c;
+
+  /* --- Raw ramp: Misty Gray (warm neutral, supporting) --- */
+  --xwb-grey-100: #f0f3f4;
+  --xwb-grey-200: #c2cdd1;
+  --xwb-grey-300: #a3b4ba;
+  --xwb-grey-400: #859ba3;
+  --xwb-grey-500: #66828c;
+
+  /* --- Raw ramp: Misty Green (the brand accent) --- */
+  --xwb-green-200: #e4f3f2;
+  --xwb-green-300: #d3ebea;
+  --xwb-green-400: #c1e3e1;
+  --xwb-green-500: #a6d7d4;
+  --xwb-green-700: #5e968d;
+
+  /* --- Raw ramp: Ember (action and exception; scarce by design) --- */
+  --xwb-ember-200: #f9e5db;
+  --xwb-ember-300: #f2c3b0;
+  --xwb-ember-400: #eb946f;
+  --xwb-ember-500: #e66d42;
+  --xwb-ember-800: #993f26;
+
+  /* --- Named brand constant --- */
+  --xwb-thunder-blue: #0a2a3d;
+
+  /* --- Semantic: surfaces --- */
+  --xwb-surface-primary:   #ffffff;
+  --xwb-surface-secondary: var(--xwb-black-50);
+  --xwb-surface-contrast:  var(--xwb-black-900);
+
+  /* --- Semantic: text ---
+     text-secondary is #556079 (6.30:1 on white), NOT Misty Gray #66828c.
+     Misty Gray measures 4.09:1 on white and fails WCAG AA for body copy.
+     Misty Gray is a graphic colour, not a text colour. */
+  --xwb-text-primary:               var(--xwb-black-900);
+  --xwb-text-secondary:             var(--xwb-black-400);
+  --xwb-text-on-contrast:           #ffffff;
+  --xwb-text-on-contrast-secondary: var(--xwb-black-200);
+
+  /* --- Semantic: borders and state --- */
+  --xwb-border-subtle:      #e4e9ed;
+  --xwb-border-default:     var(--xwb-black-100);
+  --xwb-border-strong:      var(--xwb-black-200);
+  --xwb-border-on-contrast: rgba(255, 255, 255, 0.16);
+  --xwb-focus:              var(--xwb-thunder-blue);
+
+  /* --- Semantic: accent and action --- */
+  --xwb-accent:            var(--xwb-green-500);
+  --xwb-accent-quiet:      var(--xwb-green-300);
+  /* Misty Green is the brand's secondary and therefore the highlight: the one
+     bar, row, or option the argument turns on. At #a6d7d4 it measures 1.58:1 on
+     white and simply disappears, so a light ground uses the darker sibling from
+     the same family. Ember stays action-on-light and exception; it is not a
+     highlight, and using it as one tells the reader something is wrong. */
+  --xwb-accent-strong:     var(--xwb-green-700);
+  /* The action colour is ground-dependent. On a light ground it is Ember. On a
+     dark ground it becomes Misty Green, the brand's secondary: Ember on
+     Xweather Black reads as an alert rather than an invitation, and the green
+     is what makes a dark surface look like Xweather. Both take dark text. */
+  --xwb-action:              var(--xwb-ember-500);
+  --xwb-action-hover:        var(--xwb-ember-800);
+  --xwb-text-on-action:      var(--xwb-black-900);
+  --xwb-text-on-action-hover: #ffffff;
+
+  /* --- Semantic: status.
+     Sourced from the @xweather/theme Figma palette so a document and the
+     product agree on what a severity looks like. Caution (brand yellow) and
+     warning (orange) are DIFFERENT hues with different severities. */
+  --xwb-color-info:    #16649f;
+  --xwb-color-success: #1f9544;
+  --xwb-color-caution: #efbb00;
+  --xwb-color-warning: #dc7f18;
+  --xwb-color-error:   #b23109;
+
+  /* --- Data series. Every value clears 3:1 against this theme's canvas.
+     The ramp is redefined for dark; never hardcode a series hex. --- */
+  --xwb-chart-1: var(--xwb-thunder-blue);
+  --xwb-chart-2: #16649f;
+  --xwb-chart-3: #009ac8;
+  --xwb-chart-4: #1f9544;
+  --xwb-chart-5: #6b52e0;
+  --xwb-chart-6: var(--xwb-ember-800);
+
+  /* --- Categorical lane fills. For swimlanes and roadmap bars, where colour
+     groups items by product area rather than by severity. The label sits inside
+     the bar, so every pair below clears 6:1 against its own fill. --- */
+  --xwb-lane-1-bg: #dbe7f1;  --xwb-lane-1-fg: #07406f;
+  --xwb-lane-2-bg: #d3ebea;  --xwb-lane-2-fg: #0f5b57;
+  --xwb-lane-3-bg: #e1f4e4;  --xwb-lane-3-fg: #0b6127;
+  --xwb-lane-4-bg: #e6e6fb;  --xwb-lane-4-fg: #3f2b93;
+
+  /* --- Badge fills. Text on a tint, so the word carries the meaning and the
+     color reinforces it. Every pair below is >= 6:1 against its own fill. --- */
+  --xwb-badge-neutral-bg: #eef1f3;  --xwb-badge-neutral-fg: #414b57;
+  --xwb-badge-info-bg:    #dbe7f1;  --xwb-badge-info-fg:    #074c8a;
+  --xwb-badge-success-bg: #e1f4e4;  --xwb-badge-success-fg: #0b6127;
+  --xwb-badge-caution-bg: #fbf4d2;  --xwb-badge-caution-fg: #6b4e00;
+  --xwb-badge-warning-bg: #fdf1e6;  --xwb-badge-warning-fg: #8a4a01;
+  --xwb-badge-error-bg:   #fde9e7;  --xwb-badge-error-fg:   #8f2707;
+
+  /* --- Rhythm (4px base) --- */
+  --xwb-space-1:  0.25rem;
+  --xwb-space-2:  0.5rem;
+  --xwb-space-3:  0.75rem;
+  --xwb-space-4:  1rem;
+  --xwb-space-5:  1.25rem;
+  --xwb-space-6:  1.5rem;
+  --xwb-space-8:  2rem;
+  --xwb-space-10: 2.5rem;
+  --xwb-space-12: 3rem;
+  --xwb-space-16: 4rem;
+  --xwb-space-20: 5rem;
+  --xwb-space-24: 6rem;
+
+  /* --- Shape. Restraint is the rule; nothing rounder than 4px. --- */
+  --xwb-radius-small: 2px;
+  --xwb-radius:       4px;
+
+  /* --- Type families --- */
+  --xwb-font-sans:      "Vaisala Sans", "Vaisala Sans Fallback", system-ui, sans-serif;
+  --xwb-font-mono:      "Vaisala Sans Mono", "Vaisala Sans Mono Fallback", ui-monospace, monospace;
+  --xwb-font-condensed: "Vaisala Sans Condensed", "Vaisala Sans Condensed Fallback", system-ui, sans-serif;
+
+  /* --- Type size --- */
+  --xwb-type-display:     clamp(2.75rem, 1.6rem + 4.6vw, 4.5rem);
+  --xwb-type-page-title:  clamp(2rem, 1.45rem + 2.2vw, 3rem);
+  --xwb-type-title:       clamp(1.5rem, 1.25rem + 1vw, 2rem);
+  --xwb-type-section:     1.5rem;
+  --xwb-type-subsection:  1.25rem;
+  --xwb-type-lede:        clamp(1.125rem, 1.05rem + 0.35vw, 1.375rem);
+  --xwb-type-body:        1rem;
+  --xwb-type-compact:     0.875rem;
+  /* Vaisala Sans Mono has a large x-height and wide glyphs, so at the same
+     nominal size it reads noticeably bigger than the sans beside it. Every mono
+     run is set a step down to bring the two into optical balance. */
+  --xwb-type-code:        0.8125rem;
+  --xwb-mono-ratio:       0.86;
+  --xwb-type-label:       0.8125rem;
+  --xwb-type-metadata:    0.75rem;
+
+  /* --- Type weight. Three real weights. There is no medium. --- */
+  --xwb-weight-light:   300;
+  --xwb-weight-regular: 400;
+  --xwb-weight-bold:    700;
+
+  /* --- Tracking. Xweather type is tight at display sizes and neutral at
+     reading sizes. Never apply display tracking to body copy. --- */
+  --xwb-tracking-display: -0.045em;
+  --xwb-tracking-title:   -0.035em;
+  --xwb-tracking-heading: -0.02em;
+  --xwb-tracking-lede:    -0.015em;
+  --xwb-tracking-body:    0em;
+  --xwb-tracking-label:   0.005em;
+
+  /* --- Leading --- */
+  --xwb-leading-display:    1.02;
+  --xwb-leading-page-title: 1.06;
+  --xwb-leading-title:      1.14;
+  --xwb-leading-section:    1.22;
+  --xwb-leading-subsection: 1.3;
+  --xwb-leading-lede:       1.45;
+  --xwb-leading-body:       1.6;
+  --xwb-leading-compact:    1.5;
+  --xwb-leading-caption:    1.4;
+
+  /* --- Measure and grid --- */
+  --xwb-measure: 66ch;
+  --xwb-shell-max: 1200px;
+  --xwb-shell-gutter: var(--xwb-space-6);
+}
+
+@media (min-width: 60rem) {
+  :root { --xwb-shell-gutter: var(--xwb-space-12); }
+}
+
+/* --------------------------------------------------------------------------
+   3. TOKENS -- DARK
+
+   Dark is not an inversion. Xweather Black is the brand's home ground, so
+   the dark theme is the confident one: the canvas is #09151c and Misty Green
+   becomes legible as the accent it was always meant to be.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --xwb-surface-primary:   var(--xwb-black-900);
+    --xwb-surface-secondary: var(--xwb-black-800);
+    --xwb-surface-contrast:  #ffffff;
+
+    --xwb-text-primary:               rgba(255, 255, 255, 0.94);
+    --xwb-text-secondary:             var(--xwb-black-200);
+    --xwb-text-on-contrast:           var(--xwb-black-900);
+    --xwb-text-on-contrast-secondary: var(--xwb-black-500);
+
+    --xwb-border-subtle:      rgba(255, 255, 255, 0.08);
+    --xwb-border-default:     rgba(255, 255, 255, 0.16);
+    --xwb-border-strong:      rgba(255, 255, 255, 0.32);
+    --xwb-border-on-contrast: rgba(9, 21, 28, 0.16);
+    --xwb-focus:              var(--xwb-green-500);
+
+    --xwb-accent:         var(--xwb-green-500);
+    --xwb-accent-quiet:   var(--xwb-black-600);
+    --xwb-accent-strong:  var(--xwb-green-500);
+    --xwb-action:               var(--xwb-green-500);
+    --xwb-action-hover:         var(--xwb-green-400);
+    --xwb-text-on-action:       var(--xwb-black-900);
+    --xwb-text-on-action-hover: var(--xwb-black-900);
+
+    --xwb-color-info:    #8fbadd;
+    --xwb-color-success: #67cb82;
+    --xwb-color-caution: #ffe071;
+    --xwb-color-warning: #f4b16c;
+    --xwb-color-error:   #f38b72;
+
+    --xwb-chart-1: var(--xwb-green-500);
+    --xwb-chart-2: #8fbadd;
+    --xwb-chart-3: #5fd3f9;
+    --xwb-chart-4: #67cb82;
+    --xwb-chart-5: #9994f5;
+    --xwb-chart-6: var(--xwb-ember-500);
+
+
+    --xwb-lane-1-bg: #16304a;  --xwb-lane-1-fg: #a8cbe6;
+    --xwb-lane-2-bg: #12332f;  --xwb-lane-2-fg: #8fd0c9;
+    --xwb-lane-3-bg: #152a1a;  --xwb-lane-3-fg: #8fd3a3;
+    --xwb-lane-4-bg: #221d3f;  --xwb-lane-4-fg: #b4aef0;
+    --xwb-badge-neutral-bg: #1b2831;  --xwb-badge-neutral-fg: #b3c0c9;
+    --xwb-badge-info-bg:    #12283a;  --xwb-badge-info-fg:    #a8cbe6;
+    --xwb-badge-success-bg: #152a1a;  --xwb-badge-success-fg: #8fd3a3;
+    --xwb-badge-caution-bg: #332a0d;  --xwb-badge-caution-fg: #f0d68a;
+    --xwb-badge-warning-bg: #33230f;  --xwb-badge-warning-fg: #f2bd83;
+    --xwb-badge-error-bg:   #3a1a14;  --xwb-badge-error-fg:   #f5a795;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --xwb-surface-primary:   var(--xwb-black-900);
+  --xwb-surface-secondary: var(--xwb-black-800);
+  --xwb-surface-contrast:  #ffffff;
+
+  --xwb-text-primary:               rgba(255, 255, 255, 0.94);
+  --xwb-text-secondary:             var(--xwb-black-200);
+  --xwb-text-on-contrast:           var(--xwb-black-900);
+  --xwb-text-on-contrast-secondary: var(--xwb-black-500);
+
+  --xwb-border-subtle:      rgba(255, 255, 255, 0.08);
+  --xwb-border-default:     rgba(255, 255, 255, 0.16);
+  --xwb-border-strong:      rgba(255, 255, 255, 0.32);
+  --xwb-border-on-contrast: rgba(9, 21, 28, 0.16);
+  --xwb-focus:              var(--xwb-green-500);
+
+  --xwb-accent:         var(--xwb-green-500);
+  --xwb-accent-quiet:   var(--xwb-black-600);
+  --xwb-accent-strong:  var(--xwb-green-500);
+  --xwb-action:               var(--xwb-green-500);
+  --xwb-action-hover:         var(--xwb-green-400);
+  --xwb-text-on-action:       var(--xwb-black-900);
+  --xwb-text-on-action-hover: var(--xwb-black-900);
+
+  --xwb-color-info:    #8fbadd;
+  --xwb-color-success: #67cb82;
+  --xwb-color-caution: #ffe071;
+  --xwb-color-warning: #f4b16c;
+  --xwb-color-error:   #f38b72;
+
+  --xwb-chart-1: var(--xwb-green-500);
+  --xwb-chart-2: #8fbadd;
+  --xwb-chart-3: #5fd3f9;
+  --xwb-chart-4: #67cb82;
+  --xwb-chart-5: #9994f5;
+  --xwb-chart-6: var(--xwb-ember-500);
+
+
+  --xwb-lane-1-bg: #16304a;  --xwb-lane-1-fg: #a8cbe6;
+  --xwb-lane-2-bg: #12332f;  --xwb-lane-2-fg: #8fd0c9;
+  --xwb-lane-3-bg: #152a1a;  --xwb-lane-3-fg: #8fd3a3;
+  --xwb-lane-4-bg: #221d3f;  --xwb-lane-4-fg: #b4aef0;
+  --xwb-badge-neutral-bg: #1b2831;  --xwb-badge-neutral-fg: #b3c0c9;
+  --xwb-badge-info-bg:    #12283a;  --xwb-badge-info-fg:    #a8cbe6;
+  --xwb-badge-success-bg: #152a1a;  --xwb-badge-success-fg: #8fd3a3;
+  --xwb-badge-caution-bg: #332a0d;  --xwb-badge-caution-fg: #f0d68a;
+  --xwb-badge-warning-bg: #33230f;  --xwb-badge-warning-fg: #f2bd83;
+  --xwb-badge-error-bg:   #3a1a14;  --xwb-badge-error-fg:   #f5a795;
+}
+
+/* --------------------------------------------------------------------------
+   4. BASE
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+.xwb-report {
+  margin: 0;
+  background: var(--xwb-surface-primary);
+  color: var(--xwb-text-primary);
+  font-family: var(--xwb-font-sans);
+  font-size: var(--xwb-type-body);
+  font-weight: var(--xwb-weight-regular);
+  line-height: var(--xwb-leading-body);
+  letter-spacing: var(--xwb-tracking-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.xwb-report :focus-visible {
+  outline: 2px solid var(--xwb-focus);
+  outline-offset: 2px;
+  border-radius: var(--xwb-radius-small);
+}
+
+.xwb-report img,
+.xwb-report svg,
+.xwb-report video { max-width: 100%; height: auto; }
+
+.xwb-report a {
+  color: inherit;
+  text-decoration-color: var(--xwb-border-strong);
+  text-underline-offset: 0.18em;
+}
+.xwb-report a:hover { text-decoration-color: currentColor; }
+
+.xwb-report ::selection {
+  background: var(--xwb-accent);
+  color: var(--xwb-black-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xwb-report *,
+  .xwb-report *::before,
+  .xwb-report *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.xwb-visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.xwb-skip-link {
+  position: absolute;
+  left: var(--xwb-space-4);
+  top: var(--xwb-space-4);
+  z-index: 10;
+  transform: translateY(-200%);
+  padding: var(--xwb-space-2) var(--xwb-space-4);
+  background: var(--xwb-surface-contrast);
+  color: var(--xwb-text-on-contrast);
+  border-radius: var(--xwb-radius);
+  font-size: var(--xwb-type-compact);
+  text-decoration: none;
+}
+.xwb-skip-link:focus { transform: translateY(0); }
+
+/* --------------------------------------------------------------------------
+   5. SHELL AND AUTHORSHIP
+
+   The shell is what makes a page unmistakably Xweather-authored. The wordmark
+   is a mask, so it inherits currentColor and is correct in both themes
+   without a second asset or a theme-conditional swap.
+   -------------------------------------------------------------------------- */
+
+.xwb-shell {
+  width: 100%;
+  max-width: var(--xwb-shell-max);
+  margin-inline: auto;
+  padding-inline: var(--xwb-shell-gutter);
+  padding-block: var(--xwb-space-8) var(--xwb-space-16);
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-16);
+  min-height: 100vh;
+}
+
+.xwb-header { display: block; }
+
+.xwb-masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--xwb-space-4) var(--xwb-space-8);
+}
+
+.xwb-identity { display: flex; align-items: center; }
+
+.xwb-wordmark {
+  display: block;
+  width: 137px;
+  height: 34px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--xwb-wordmark-src);
+  mask-image: var(--xwb-wordmark-src);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.xwb-document-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xwb-space-2) var(--xwb-space-6);
+  margin: 0;
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+}
+.xwb-document-meta > * { margin: 0; }
+
+.xwb-recipient,
+.xwb-state,
+.xwb-date,
+.xwb-confidentiality { display: block; }
+
+.xwb-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--xwb-space-4);
+  margin-top: auto;
+  padding-top: var(--xwb-space-8);
+  font-size: var(--xwb-type-metadata);
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-mark {
+  display: block;
+  width: 96px;
+  height: 24px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--xwb-wordmark-src);
+  mask-image: var(--xwb-wordmark-src);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------------------------------
+   6. LAYOUT
+   -------------------------------------------------------------------------- */
+
+/* Rhythm is relational, never uniform.
+
+   A flat gap on every child is the single most common cause of a document that
+   reads as an undifferentiated stack: a heading ends up exactly as far from its
+   own first paragraph as from the unrelated block above it, so grouping stops
+   being visible and the reader loses the outline.
+
+   The rule: the space ABOVE a heading is always larger than the space BELOW it.
+   The ladder, tightest to widest:
+
+     heading to its own body    --xwb-space-2 / 3   by level
+     paragraph to paragraph     --xwb-space-4       (owned by .xwb-flow / .xwb-prose)
+     peer block to peer block   --xwb-space-5
+     before a nested heading    --xwb-space-6 / 8
+     before a section heading   --xwb-space-10
+     section to section         --xwb-space-16      (owned by .xwb-main)
+
+   flow-root keeps these margins from collapsing out of the section. */
+.xwb-section {
+  display: flow-root;
+}
+
+/* Every rule below is written `.xwb-report .xwb-section > ...` rather than
+   `.xwb-section > ...`, and the extra class is load-bearing.
+
+   The type roles further down this file reset `margin: 0` defensively, and so
+   does almost every page-owned block class an author writes. Those selectors are
+   a single class, specificity (0,1,0). A bare `.xwb-section > * + *` is also
+   (0,1,0) and appears EARLIER in the file, so the later reset silently wins and
+   the element loses its gap entirely. The failure is invisible in the CSS and
+   shows up only as two blocks fused together in the render.
+
+   `.xwb-report` is always on the root element, so prefixing costs nothing and
+   lifts the rhythm to (0,2,0), above any single-class reset. */
+
+.xwb-report .xwb-section > * { margin-block: 0; }
+.xwb-report .xwb-section > * + * { margin-top: var(--xwb-space-5); }
+
+/* Bind a heading to what it introduces. */
+.xwb-report .xwb-section > .xwb-heading-24 + *,
+.xwb-report .xwb-section > .xwb-heading-20 + * { margin-top: var(--xwb-space-3); }
+.xwb-report .xwb-section > .xwb-heading-16 + * { margin-top: var(--xwb-space-2); }
+
+/* A heading binds tightly to a PARAGRAPH, but a block group is a different
+   object: a grid of columns, a table, a chart, a calculator. At 12px it collides
+   with the heading, and a table's caption starts reading as the heading's
+   subtitle. Give any grouped block a step more room. */
+.xwb-report .xwb-section
+  > :is(.xwb-heading-24, .xwb-heading-20, .xwb-heading-16, .xwb-subhead)
+  + :is(.xwb-table-wrap, .xwb-comparison, .xwb-grid, .xwb-split, .xwb-chart,
+        .xwb-stat-strip, .xwb-calculator, .xwb-bar-comparison, .xwb-band) {
+  margin-top: var(--xwb-space-6);
+}
+
+/* An evidence block closes a thought. Whatever follows begins a new one, so it
+   needs more air than a peer block, or it reads as part of the table's last row. */
+.xwb-report .xwb-section > .xwb-table-wrap + *,
+.xwb-report .xwb-section > .xwb-chart + *,
+.xwb-report .xwb-section > .xwb-stat-strip + * { margin-top: var(--xwb-space-10); }
+
+/* A callout interrupts the reading. Separate it on both sides. */
+.xwb-report .xwb-section > * + .xwb-note { margin-top: var(--xwb-space-6); }
+.xwb-report .xwb-section > .xwb-note + * { margin-top: var(--xwb-space-6); }
+
+/* Open a group. A section turn has to be unmistakable while skimming, so these
+   are generous by design.
+
+   ORDER MATTERS. These sit AFTER the evidence and callout rules above, and they
+   have to. All of them are (0,3,0), so the later declaration wins, and a heading
+   that follows a table must take the heading gap rather than the smaller
+   after-a-table gap. With these declared first, every subsection heading that
+   happened to follow a table silently collapsed to the narrower value, which is
+   the commonest place a long document starts to feel cramped. */
+.xwb-report .xwb-section > * + .xwb-heading-24 { margin-top: var(--xwb-space-20); }
+.xwb-report .xwb-section > * + .xwb-heading-20 { margin-top: var(--xwb-space-16); }
+.xwb-report .xwb-section > * + .xwb-heading-16 { margin-top: var(--xwb-space-10); }
+.xwb-report .xwb-section > * + .xwb-subhead    { margin-top: var(--xwb-space-8); }
+.xwb-report .xwb-section > .xwb-subhead + *    { margin-top: var(--xwb-space-2); }
+
+/* A caption or source explains the thing directly above it, so it stays close.
+   Last on purpose: it must win over the evidence-block rule above. */
+.xwb-report .xwb-section > * + .xwb-caption,
+.xwb-report .xwb-section > * + .xwb-meta { margin-top: var(--xwb-space-2); }
+
+.xwb-chapter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-16);
+}
+
+main.xwb-main,
+.xwb-shell > main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-24);
+}
+
+/* Reading column. Prose lives here; evidence may exceed it. */
+.xwb-reading { max-width: var(--xwb-measure); }
+
+/* Owned-gap primitives. A flow, stack, cluster or grid owns the gap between
+   its children; the children must not add competing margins. */
+.xwb-flow > * { margin-block: 0; }
+.xwb-flow > * + * { margin-block-start: var(--xwb-space-4); }
+
+.xwb-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-4);
+}
+.xwb-stack > * { margin-block: 0; }
+
+.xwb-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--xwb-space-2) var(--xwb-space-6);
+}
+.xwb-cluster > * { margin-block: 0; }
+
+/* 12 / 6 / 4 column shared grid. */
+.xwb-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--xwb-space-6);
+}
+.xwb-grid > * { min-width: 0; }
+
+@media (min-width: 48rem) {
+  .xwb-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--xwb-space-6) var(--xwb-space-8); }
+}
+@media (min-width: 64rem) {
+  .xwb-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+}
+
+.xwb-span-4, .xwb-span-5, .xwb-span-6,
+.xwb-span-7, .xwb-span-8, .xwb-span-12 { grid-column: 1 / -1; }
+
+@media (min-width: 64rem) {
+  .xwb-span-4  { grid-column: span 4; }
+  .xwb-span-5  { grid-column: span 5; }
+  .xwb-span-6  { grid-column: span 6; }
+  .xwb-span-7  { grid-column: span 7; }
+  .xwb-span-8  { grid-column: span 8; }
+  .xwb-span-12 { grid-column: 1 / -1; }
+}
+
+.xwb-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--xwb-space-6);
+  align-items: start;
+}
+@media (min-width: 64rem) {
+  .xwb-split { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--xwb-space-12); }
+}
+
+/* Full-bleed tonal band. The ONLY sanctioned way to make a contrast field --
+   it owns its nested text, border and control colours. Do not rebuild one
+   in page CSS. */
+.xwb-band {
+  position: relative;
+  padding-block: var(--xwb-space-12);
+  padding-inline: var(--xwb-shell-gutter);
+  margin-inline: calc(-1 * var(--xwb-shell-gutter));
+  border-radius: var(--xwb-radius);
+}
+
+.xwb-band[data-tone="quiet"] { background: var(--xwb-surface-secondary); }
+
+.xwb-band[data-tone="contrast"] {
+  background: var(--xwb-black-900);
+  color: rgba(255, 255, 255, 0.94);
+  --xwb-text-primary: rgba(255, 255, 255, 0.94);
+  --xwb-text-secondary: var(--xwb-black-200);
+  --xwb-border-subtle: rgba(255, 255, 255, 0.08);
+  --xwb-border-default: rgba(255, 255, 255, 0.16);
+  --xwb-border-strong: rgba(255, 255, 255, 0.32);
+  --xwb-surface-primary: var(--xwb-black-900);
+  --xwb-surface-secondary: var(--xwb-black-800);
+  --xwb-focus: var(--xwb-green-500);
+  --xwb-accent: var(--xwb-green-500);
+  --xwb-accent-strong: var(--xwb-green-500);
+  --xwb-action: var(--xwb-green-500);
+  --xwb-action-hover: var(--xwb-green-400);
+  --xwb-text-on-action: var(--xwb-black-900);
+  --xwb-text-on-action-hover: var(--xwb-black-900);
+  --xwb-chart-1: var(--xwb-green-500);
+  --xwb-chart-2: #8fbadd;
+  --xwb-chart-3: #5fd3f9;
+  --xwb-chart-4: #67cb82;
+  --xwb-chart-5: #9994f5;
+  --xwb-chart-6: var(--xwb-ember-500);
+}
+
+/* --------------------------------------------------------------------------
+   7. TYPE ROLES
+
+   Roles, not sizes. Peers always share a role. Never invent a font-size or a
+   numeric weight in page CSS -- if no role fits, the content is misclassified.
+   -------------------------------------------------------------------------- */
+
+.xwb-display,
+.xwb-title,
+.xwb-heading-24,
+.xwb-heading-20,
+.xwb-heading-16 {
+  margin: 0;
+  font-family: var(--xwb-font-sans);
+  color: var(--xwb-text-primary);
+  text-wrap: balance;
+}
+
+.xwb-display {
+  font-size: var(--xwb-type-display);
+  font-weight: var(--xwb-weight-light);
+  line-height: var(--xwb-leading-display);
+  letter-spacing: var(--xwb-tracking-display);
+}
+
+.xwb-title {
+  font-size: var(--xwb-type-page-title);
+  font-weight: var(--xwb-weight-light);
+  line-height: var(--xwb-leading-page-title);
+  letter-spacing: var(--xwb-tracking-title);
+}
+
+/* Regular, not Light. At section-heading size on a long document, Light does
+   not hold the eye during a skim, and a section heading that reads lighter than
+   the subsection heading beneath it inverts the hierarchy. Light stops at
+   .xwb-title; from .xwb-heading-24 down, headings are Regular. */
+.xwb-heading-24 {
+  font-size: var(--xwb-type-title);
+  font-weight: var(--xwb-weight-regular);
+  line-height: var(--xwb-leading-title);
+  letter-spacing: var(--xwb-tracking-title);
+}
+
+.xwb-heading-20 {
+  font-size: var(--xwb-type-section);
+  font-weight: var(--xwb-weight-regular);
+  line-height: var(--xwb-leading-section);
+  letter-spacing: var(--xwb-tracking-heading);
+}
+
+.xwb-heading-16 {
+  font-size: var(--xwb-type-subsection);
+  font-weight: var(--xwb-weight-regular);
+  line-height: var(--xwb-leading-subsection);
+  letter-spacing: var(--xwb-tracking-heading);
+}
+
+/* The smallest heading. Body size, Bold, primary text.
+
+   Use it to title a short passage, a card, or one column of a peer group: the
+   place where a 20px heading is too much and a 13px label is the wrong role
+   entirely. A label is metadata ABOUT something; a subhead is the NAME of the
+   thing beneath it, and readers treat the two very differently.
+
+   Below this size the ladder stops being driven by scale and starts being
+   driven by weight, which is why this is the one heading role set in Bold. */
+.xwb-subhead {
+  margin: 0;
+  font-family: var(--xwb-font-sans);
+  font-size: var(--xwb-type-body);
+  font-weight: var(--xwb-weight-bold);
+  line-height: var(--xwb-leading-compact);
+  letter-spacing: var(--xwb-tracking-body);
+  color: var(--xwb-text-primary);
+  text-wrap: balance;
+}
+
+.xwb-lede {
+  margin: 0;
+  max-width: var(--xwb-measure);
+  font-size: var(--xwb-type-lede);
+  font-weight: var(--xwb-weight-light);
+  line-height: var(--xwb-leading-lede);
+  letter-spacing: var(--xwb-tracking-lede);
+  color: var(--xwb-text-secondary);
+  text-wrap: pretty;
+}
+
+.xwb-label {
+  display: block;
+  margin: 0;
+  font-size: var(--xwb-type-label);
+  font-weight: var(--xwb-weight-regular);
+  line-height: var(--xwb-leading-compact);
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-meta,
+.xwb-caption {
+  margin: 0;
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-caption { max-width: var(--xwb-measure); text-wrap: pretty; }
+
+.xwb-mono {
+  font-family: var(--xwb-font-mono);
+  font-size: calc(1em * var(--xwb-mono-ratio));
+  letter-spacing: 0.01em;
+  font-variant-ligatures: none;
+}
+
+/* Every aligned figure. Tabular by default -- digits must not jitter. */
+.xwb-numeric {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  text-align: right;
+}
+
+.xwb-note {
+  margin: 0;
+  padding-block: var(--xwb-space-2);
+  padding-left: var(--xwb-space-4);
+  border-left: 2px solid var(--xwb-border-strong);
+  max-width: var(--xwb-measure);
+  font-size: var(--xwb-type-compact);
+  line-height: var(--xwb-leading-compact);
+  color: var(--xwb-text-secondary);
+}
+
+/* Code block. Sized to its content, not to the page: a one-line command has no
+   business sitting in a full-width slab of fill. Long lines scroll inside it
+   rather than stretching it. */
+.xwb-code {
+  margin: 0;
+  margin-left: calc(-1 * var(--xwb-space-4));
+  width: fit-content;
+  max-width: 100%;
+  min-width: 0;
+  padding: var(--xwb-space-4);
+  background: var(--xwb-surface-secondary);
+  border-radius: var(--xwb-radius);
+  overflow-x: auto;
+  font-family: var(--xwb-font-mono);
+  font-size: var(--xwb-type-code);
+  line-height: var(--xwb-leading-compact);
+  tab-size: 2;
+}
+
+.xwb-code code {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  white-space: pre;
+}
+
+/* Inline code inside running prose. */
+.xwb-report :not(.xwb-code) > code {
+  font-family: var(--xwb-font-mono);
+  font-size: calc(1em * var(--xwb-mono-ratio));
+  background: var(--xwb-surface-secondary);
+  padding: 0.1em 0.35em;
+  border-radius: var(--xwb-radius-small);
+  word-break: break-word;
+}
+
+.xwb-formula {
+  margin: 0;
+  margin-left: calc(-1 * var(--xwb-space-4));
+  padding: var(--xwb-space-3) var(--xwb-space-4);
+  background: var(--xwb-surface-secondary);
+  border-radius: var(--xwb-radius);
+  font-family: var(--xwb-font-mono);
+  font-size: var(--xwb-type-code);
+  line-height: var(--xwb-leading-compact);
+  overflow-x: auto;
+}
+
+.xwb-sources {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-2);
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   8. OPENING
+
+   The first viewport is the argument. The opening carries the claim, the
+   proof that earns it, and only the context needed to read them.
+   -------------------------------------------------------------------------- */
+
+.xwb-opening {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-6);
+}
+
+.xwb-opening-claim { max-width: 20ch; }
+.xwb-opening-claim.xwb-title,
+.xwb-opening-claim.xwb-display { max-width: 24ch; }
+
+.xwb-opening-proof {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xwb-space-8) var(--xwb-space-12);
+  align-items: flex-start;
+}
+
+.xwb-opening-context {
+  max-width: var(--xwb-measure);
+  color: var(--xwb-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   9. PROVENANCE  (Xweather-specific, and non-negotiable)
+
+   Xweather is a measurement company. A reader must be able to tell, at a
+   glance and without hunting, whether a number was MEASURED, PREDICTED,
+   DERIVED, or ASSERTED. Blurring those is the one brand failure that
+   actually costs trust.
+
+   Attach to any value whose kind is not obvious from its immediate context.
+   The marker carries a text label; colour never carries the distinction alone.
+   -------------------------------------------------------------------------- */
+
+.xwb-provenance {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--xwb-space-1);
+  font-size: var(--xwb-type-metadata);
+  font-weight: var(--xwb-weight-regular);
+  letter-spacing: var(--xwb-tracking-label);
+  line-height: 1;
+  color: var(--xwb-text-secondary);
+  white-space: nowrap;
+}
+
+.xwb-provenance::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex: none;
+  background: currentColor;
+}
+
+/* Observed: measured at a station, sensor or satellite. Solid square. */
+.xwb-provenance[data-kind="observed"] { color: var(--xwb-text-primary); }
+
+/* Forecast: a model prediction for a future time. Hollow square. */
+.xwb-provenance[data-kind="forecast"]::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+
+/* Modeled: interpolated, downscaled or post-processed. Half square. */
+.xwb-provenance[data-kind="modeled"]::before {
+  background: linear-gradient(135deg, currentColor 50%, transparent 50%);
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+/* Interpretation: Xweather-authored judgement derived from the above. Rule. */
+.xwb-provenance[data-kind="interpretation"]::before {
+  width: 8px;
+  height: 1.5px;
+}
+
+.xwb-asof {
+  font-size: var(--xwb-type-metadata);
+  color: var(--xwb-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   10. EVIDENCE -- STATS
+   -------------------------------------------------------------------------- */
+
+.xwb-stat-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xwb-space-8) var(--xwb-space-12);
+  padding-block: var(--xwb-space-6);
+  border-block: 1px solid var(--xwb-border-subtle);
+}
+
+/* A quiet fill instead of a pair of hairlines. Prefer this when the strip sits
+   directly under the lede, where two rules stack up against the masthead rule
+   and the page starts to look ruled rather than composed. */
+.xwb-stat-strip[data-surface="filled"] {
+  border-block: 0;
+  background: var(--xwb-surface-secondary);
+  border-radius: var(--xwb-radius);
+  padding: var(--xwb-space-6);
+  /* Bleed the padding outward. A filled container that keeps its padding inside
+     pushes its first word right by the padding amount, so the text inside no
+     longer lines up with the text above and below it and the page grows a step
+     in its left edge. Pulling the box out by exactly its own padding puts the
+     content back on the common line and lets the fill read as a tint behind the
+     text rather than as a box the text sits in. */
+  margin-inline: calc(-1 * var(--xwb-space-6));
+  gap: var(--xwb-space-6) var(--xwb-space-10);
+}
+
+.xwb-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-1);
+  min-width: 0;
+}
+.xwb-stat > * { margin: 0; }
+
+/* Primary text, not secondary. The label above a stat NAMES the value: it is
+   half the statement, and the pair reads as one object. Set in secondary grey it
+   looks like help text hovering over an unlabelled number, and the eye skips it.
+   The detail BELOW the value is genuinely subordinate, so that one stays grey. */
+.xwb-stat-label {
+  font-size: var(--xwb-type-label);
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-primary);
+  order: 1;
+}
+
+/* Two sizes, and the choice is about role, not taste.
+
+   Default (primary): the numbers ARE the finding. A reader who saw only these
+   would have the answer. Reserve the large size for a handful of values that
+   carry the artifact's argument.
+
+   data-scale="secondary": the numbers describe the work rather than deliver a
+   finding. Scope, counts, effort, coverage. They orient the reader and belong
+   near the top, but they are not the point, and setting them at display size
+   makes an ordinary document shout. */
+.xwb-stat-value {
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  font-weight: var(--xwb-weight-light);
+  line-height: 1;
+  letter-spacing: var(--xwb-tracking-title);
+  font-variant-numeric: tabular-nums;
+  color: var(--xwb-text-primary);
+  order: 2;
+}
+
+.xwb-stat-strip[data-scale="secondary"] .xwb-stat-value {
+  font-size: clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem);
+  font-weight: var(--xwb-weight-regular);
+  letter-spacing: var(--xwb-tracking-heading);
+}
+
+.xwb-stat-detail {
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+  order: 3;
+}
+
+/* --------------------------------------------------------------------------
+   11. EVIDENCE -- TABLES
+
+   Tables are evidence, not decoration. Rules are horizontal only; a table
+   never becomes a grid of boxes.
+   -------------------------------------------------------------------------- */
+
+.xwb-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.xwb-table-wrap > table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--xwb-type-compact);
+  line-height: var(--xwb-leading-compact);
+}
+
+.xwb-table-wrap caption {
+  text-align: left;
+  padding-bottom: var(--xwb-space-3);
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-table-wrap th,
+.xwb-table-wrap td {
+  padding: var(--xwb-space-3) var(--xwb-space-4);
+  text-align: left;
+  vertical-align: baseline;
+  border-bottom: 1px solid var(--xwb-border-subtle);
+}
+
+/* A cell holding a sentence is still prose, and prose does not become readable
+   because it sits in a table. A wordy column left to fill the evidence width
+   gives the reader 150-character lines while the body copy beside it is capped
+   at 66.
+
+   Mark such a table `data-cells="prose"`. It stops stretching to the section and
+   sizes to its content instead, with a ceiling that keeps the widest column near
+   a readable measure.
+
+   Note for anyone tempted to "fix" this with `td { max-width }`: that does not
+   work. Under auto table layout the columns must sum to the table width, so a
+   cell max-width is ignored. The constraint has to be on the table. */
+.xwb-table-wrap[data-cells="prose"] > table {
+  width: auto;
+  max-width: min(100%, 56rem);
+}
+.xwb-table-wrap th:first-child,
+.xwb-table-wrap td:first-child { padding-inline-start: 0; }
+.xwb-table-wrap th:last-child,
+.xwb-table-wrap td:last-child { padding-inline-end: 0; }
+
+/* Bold, not Regular. A header row is the one place in a document where Bold
+   earns its keep: it is a fixed label a reader returns to while scanning rows,
+   and at label size Regular does not separate it from the data beneath. */
+.xwb-table-wrap thead th {
+  vertical-align: bottom;
+  border-bottom: 1px solid var(--xwb-border-strong);
+  font-weight: var(--xwb-weight-bold);
+  font-size: var(--xwb-type-label);
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-table-wrap tbody th {
+  font-weight: var(--xwb-weight-regular);
+  color: var(--xwb-text-primary);
+}
+
+/* Opt in when the first column is the lookup key a reader scans down, rather
+   than just the first of several equal fields. */
+.xwb-table-wrap[data-row-labels="strong"] tbody th {
+  font-weight: var(--xwb-weight-bold);
+}
+
+/* A code chip already carries its own emphasis. Bolding it as well makes the
+   first column heavier than the header row above it. */
+.xwb-table-wrap[data-row-labels="strong"] tbody th code {
+  font-weight: var(--xwb-weight-regular);
+}
+
+/* Every table closes with a rule. The last row drops its own hairline and the
+   table element carries one strong bottom border instead, so the evidence has a
+   definite end and the block after it cannot appear to belong to the last row. */
+.xwb-table-wrap > table { border-bottom: 1px solid var(--xwb-border-strong); }
+.xwb-table-wrap tbody tr:last-child th,
+.xwb-table-wrap tbody tr:last-child td { border-bottom: 0; }
+
+.xwb-table-wrap tfoot th,
+.xwb-table-wrap tfoot td {
+  border-top: 1px solid var(--xwb-border-strong);
+  border-bottom: 0;
+}
+
+/* Numeric columns: put this on the th AND every td in the column. A td
+   alone will not align its header. */
+.xwb-table-wrap th.xwb-numeric,
+.xwb-table-wrap td.xwb-numeric,
+.xwb-table-wrap th[data-align="numeric"],
+.xwb-table-wrap td[data-align="numeric"] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.xwb-table-wrap[data-density="compact"] th,
+.xwb-table-wrap[data-density="compact"] td {
+  padding-block: var(--xwb-space-2);
+}
+
+.xwb-table-wrap tbody tr[data-emphasis="true"] th,
+.xwb-table-wrap tbody tr[data-emphasis="true"] td {
+  background: var(--xwb-surface-secondary);
+}
+
+/* Qualitative peer comparison -- for short differences that do not warrant
+   a full lookup table. */
+.xwb-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: var(--xwb-space-8);
+}
+.xwb-comparison > * { min-width: 0; display: flex; flex-direction: column; gap: var(--xwb-space-2); }
+.xwb-comparison > * > * { margin: 0; }
+
+/* --------------------------------------------------------------------------
+   12. EVIDENCE -- CHARTS
+   -------------------------------------------------------------------------- */
+
+.xwb-chart {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-4);
+  min-width: 0;
+}
+
+.xwb-chart-header { display: flex; flex-direction: column; gap: var(--xwb-space-1); }
+.xwb-chart-header > * { margin: 0; }
+
+.xwb-chart-viewport { width: 100%; min-width: 0; overflow: visible; }
+.xwb-chart-viewport svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+.xwb-chart figcaption,
+.xwb-chart .xwb-caption { color: var(--xwb-text-secondary); }
+
+.xwb-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xwb-space-2) var(--xwb-space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--xwb-type-metadata);
+  color: var(--xwb-text-secondary);
+}
+.xwb-legend > li { display: inline-flex; align-items: center; gap: var(--xwb-space-2); }
+
+/* SVG mark roles. Combine a role with a numbered series:
+   class="xwb-series-stroke xwb-series-2". Never write xwb-series-stroke-2. */
+.xwb-series-stroke { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.xwb-series-fill   { stroke: none; }
+
+.xwb-series-1.xwb-series-stroke { stroke: var(--xwb-chart-1); }
+.xwb-series-2.xwb-series-stroke { stroke: var(--xwb-chart-2); }
+.xwb-series-3.xwb-series-stroke { stroke: var(--xwb-chart-3); }
+.xwb-series-4.xwb-series-stroke { stroke: var(--xwb-chart-4); }
+.xwb-series-5.xwb-series-stroke { stroke: var(--xwb-chart-5); }
+.xwb-series-6.xwb-series-stroke { stroke: var(--xwb-chart-6); }
+
+.xwb-series-1.xwb-series-fill { fill: var(--xwb-chart-1); }
+.xwb-series-2.xwb-series-fill { fill: var(--xwb-chart-2); }
+.xwb-series-3.xwb-series-fill { fill: var(--xwb-chart-3); }
+.xwb-series-4.xwb-series-fill { fill: var(--xwb-chart-4); }
+.xwb-series-5.xwb-series-fill { fill: var(--xwb-chart-5); }
+.xwb-series-6.xwb-series-fill { fill: var(--xwb-chart-6); }
+
+.xwb-chart-axis {
+  stroke: var(--xwb-border-strong);
+  stroke-width: 1;
+  fill: none;
+}
+
+.xwb-chart-gridline {
+  stroke: var(--xwb-border-subtle);
+  stroke-width: 1;
+  fill: none;
+}
+
+.xwb-data-point { stroke: var(--xwb-surface-primary); stroke-width: 1.5; }
+
+.xwb-chart-direct-label,
+.xwb-chart-value,
+.xwb-chart-annotation {
+  font-family: var(--xwb-font-sans);
+  fill: var(--xwb-text-secondary);
+  stroke: none;
+}
+
+.xwb-chart-direct-label { font-size: 12px; }
+.xwb-chart-value { font-size: 12px; fill: var(--xwb-text-primary); font-variant-numeric: tabular-nums; }
+.xwb-chart-annotation { font-size: 11px; }
+
+.xwb-chart-annotation-line {
+  stroke: var(--xwb-border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  fill: none;
+}
+
+/* --------------------------------------------------------------------------
+   13. EVIDENCE -- BAR COMPARISON
+
+   One layout for the whole set, never row by row. Label lane, plot lane and
+   value lane are shared tracks on the parent, so every track starts and ends
+   on the same grid lines and only the fill length varies.
+   -------------------------------------------------------------------------- */
+
+.xwb-bar-comparison { display: flex; flex-direction: column; gap: var(--xwb-space-4); min-width: 0; }
+
+.xwb-bar-list {
+  display: grid;
+  grid-template-columns: minmax(6rem, max-content) minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: var(--xwb-space-3) var(--xwb-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.xwb-bar { display: contents; }
+
+.xwb-bar-label {
+  grid-column: 1;
+  font-size: var(--xwb-type-compact);
+  line-height: var(--xwb-leading-compact);
+  color: var(--xwb-text-primary);
+  min-width: 0;
+}
+
+.xwb-bar-track {
+  grid-column: 2;
+  position: relative;
+  height: 0.75rem;
+  min-width: 0;
+  background: var(--xwb-surface-secondary);
+  border-radius: var(--xwb-radius-small);
+  overflow: hidden;
+}
+
+.xwb-bar-fill {
+  display: block;
+  height: 100%;
+  width: var(--xwb-bar-length, 0%);
+  background: var(--xwb-chart-1);
+  border-radius: var(--xwb-radius-small);
+}
+
+.xwb-bar-value {
+  grid-column: 3;
+  font-size: var(--xwb-type-compact);
+  font-variant-numeric: tabular-nums;
+  color: var(--xwb-text-primary);
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   14. CONTROLS AND CALCULATORS
+   -------------------------------------------------------------------------- */
+
+.xwb-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--xwb-space-2);
+  padding: var(--xwb-space-3) var(--xwb-space-5);
+  min-height: 2.5rem;
+  font-family: inherit;
+  font-size: var(--xwb-type-compact);
+  font-weight: var(--xwb-weight-regular);
+  line-height: 1.2;
+  letter-spacing: var(--xwb-tracking-label);
+  border: 1px solid transparent;
+  border-radius: var(--xwb-radius);
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+  background: var(--xwb-text-primary);
+  color: var(--xwb-surface-primary);
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+.xwb-button:hover { background: var(--xwb-black-700); }
+
+/* Ember action. Dark text, always: white on Ember measures 3.17:1 and fails
+   WCAG AA. Xweather Black on Ember measures 5.84:1 and passes. */
+.xwb-button[data-variant="action"] {
+  background: var(--xwb-action);
+  color: var(--xwb-text-on-action);
+  border-color: var(--xwb-action);
+}
+.xwb-button[data-variant="action"]:hover {
+  background: var(--xwb-action-hover);
+  border-color: var(--xwb-action-hover);
+  color: var(--xwb-text-on-action-hover);
+}
+
+.xwb-button[data-variant="quiet"] {
+  background: transparent;
+  color: var(--xwb-text-primary);
+  border-color: var(--xwb-border-strong);
+}
+.xwb-button[data-variant="quiet"]:hover { border-color: var(--xwb-text-primary); }
+
+.xwb-button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.xwb-field { display: flex; flex-direction: column; gap: var(--xwb-space-2); min-width: 0; }
+.xwb-field > * { margin: 0; }
+
+.xwb-field input,
+.xwb-field select,
+.xwb-field textarea {
+  width: 100%;
+  min-height: 2.5rem;
+  padding: var(--xwb-space-2) var(--xwb-space-3);
+  font-family: inherit;
+  font-size: var(--xwb-type-body);
+  color: var(--xwb-text-primary);
+  background: var(--xwb-surface-primary);
+  border: 1px solid var(--xwb-border-strong);
+  border-radius: var(--xwb-radius);
+  font-variant-numeric: tabular-nums;
+}
+.xwb-field input[type="range"] { padding: 0; border: 0; background: transparent; min-height: 1.5rem; accent-color: var(--xwb-action); }
+
+.xwb-unit-field {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--xwb-border-strong);
+  border-radius: var(--xwb-radius);
+  background: var(--xwb-surface-primary);
+  overflow: hidden;
+}
+.xwb-unit-field:focus-within { outline: 2px solid var(--xwb-focus); outline-offset: 1px; }
+.xwb-unit-field input { border: 0; border-radius: 0; background: transparent; }
+.xwb-unit-field input:focus-visible { outline: none; }
+
+.xwb-unit-prefix,
+.xwb-unit-suffix {
+  display: flex;
+  align-items: center;
+  padding-inline: var(--xwb-space-3);
+  font-size: var(--xwb-type-compact);
+  color: var(--xwb-text-secondary);
+  background: var(--xwb-surface-secondary);
+  white-space: nowrap;
+}
+
+.xwb-helper,
+.xwb-error {
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+}
+.xwb-helper { color: var(--xwb-text-secondary); }
+.xwb-error  { color: var(--xwb-color-error); }
+
+.xwb-range-ends {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--xwb-type-metadata);
+  color: var(--xwb-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.xwb-calculator {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--xwb-space-8);
+  padding: var(--xwb-space-6);
+  border: 1px solid var(--xwb-border-default);
+  border-radius: var(--xwb-radius);
+  align-items: start;
+}
+@media (min-width: 64rem) {
+  .xwb-calculator { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--xwb-space-12); }
+}
+
+.xwb-calculator-inputs { display: flex; flex-direction: column; gap: var(--xwb-space-5); min-width: 0; }
+.xwb-calculator-output { display: flex; flex-direction: column; gap: var(--xwb-space-6); min-width: 0; }
+
+.xwb-control-group { display: flex; flex-direction: column; gap: var(--xwb-space-4); min-width: 0; }
+
+.xwb-result-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--xwb-space-6) var(--xwb-space-10);
+}
+
+.xwb-result { display: flex; flex-direction: column; gap: var(--xwb-space-1); min-width: 0; }
+.xwb-result > * { margin: 0; }
+
+.xwb-result-label {
+  font-size: var(--xwb-type-label);
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-primary);
+}
+
+.xwb-result-value {
+  font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  font-weight: var(--xwb-weight-light);
+  line-height: 1.05;
+  letter-spacing: var(--xwb-tracking-title);
+  font-variant-numeric: tabular-nums;
+  color: var(--xwb-text-primary);
+}
+
+.xwb-result-detail {
+  font-size: var(--xwb-type-metadata);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   15. STATUS
+
+   Severity always carries a text label. Colour is the second signal,
+   never the only one.
+   -------------------------------------------------------------------------- */
+
+/* A badge classifies an item into a bounded, meaningful set: severity, priority,
+   state, or outcome. The label is always present and always primary; the tint
+   reinforces it and never carries the meaning alone. Squared to the brand
+   radius, never a pill, never uppercase, never Bold.
+
+   Use it when the same small vocabulary repeats down a column or a list and the
+   reader scans for one value. Do not use it for ordinary metadata, dates,
+   counts, chart annotations, or editorial labels. Those are text. */
+.xwb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--xwb-space-1);
+  padding: 0.15em var(--xwb-space-2);
+  border-radius: var(--xwb-radius-small);
+  font-size: var(--xwb-type-label);
+  font-weight: var(--xwb-weight-regular);
+  line-height: 1.45;
+  letter-spacing: var(--xwb-tracking-label);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  background: var(--xwb-badge-neutral-bg);
+  color: var(--xwb-badge-neutral-fg);
+}
+
+.xwb-badge[data-severity="info"]    { background: var(--xwb-badge-info-bg);    color: var(--xwb-badge-info-fg); }
+.xwb-badge[data-severity="success"] { background: var(--xwb-badge-success-bg); color: var(--xwb-badge-success-fg); }
+.xwb-badge[data-severity="caution"] { background: var(--xwb-badge-caution-bg); color: var(--xwb-badge-caution-fg); }
+.xwb-badge[data-severity="warning"] { background: var(--xwb-badge-warning-bg); color: var(--xwb-badge-warning-fg); }
+.xwb-badge[data-severity="error"]   { background: var(--xwb-badge-error-bg);   color: var(--xwb-badge-error-fg); }
+
+/* In a table, a badge column stays narrow and top-aligned with its row. */
+.xwb-table-wrap td > .xwb-badge { vertical-align: baseline; }
+
+.xwb-status {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--xwb-space-2);
+  font-size: var(--xwb-type-compact);
+  color: var(--xwb-text-primary);
+}
+.xwb-status::before {
+  content: "";
+  align-self: center;
+  width: 8px; height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--xwb-text-secondary);
+}
+.xwb-status[data-severity="success"]::before { background: var(--xwb-color-success); }
+.xwb-status[data-severity="info"]::before    { background: var(--xwb-color-info); }
+.xwb-status[data-severity="caution"]::before { background: var(--xwb-color-caution); }
+.xwb-status[data-severity="warning"]::before { background: var(--xwb-color-warning); }
+.xwb-status[data-severity="error"]::before   { background: var(--xwb-color-error); }
+
+/* --------------------------------------------------------------------------
+   16. PRINT
+   -------------------------------------------------------------------------- */
+
+/* A document prints portrait with real margins. The page box is set here and
+   nowhere else: `@page` is document-scoped, not selector-scoped, so a second
+   bare `@page` rule anywhere in this file would silently reformat every
+   artifact that loads it. Slides use a NAMED page instead, further down. */
+@page {
+  size: letter;
+  margin: 16mm 15mm 14mm;
+}
+
+@media print {
+  /* Chrome drops background colours and images when printing unless told not
+     to, and the property is inherited, so declaring it once on the root keeps
+     every badge tint, band, card, fill, and scrim intact. Without this a
+     document prints as unstyled text with the meaning removed: a severity badge
+     becomes a bare word, a contrast band becomes white, and a photograph's
+     scrim disappears out from under the type sitting on it. */
+  .xwb-report {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+
+    /* Print gets its own type scale, fixed and free of viewport units.
+
+       On screen the display sizes are fluid, which is right for a window that
+       can be any width. A page cannot: `vw` in print resolves against the page
+       box, so a fluid scale silently ties type size to paper size, and Letter
+       and A4 would set differently. These are the screen values at about 85%,
+       which is the density a printed document wants: a reader holding paper is
+       closer to it than a reader leaning back from a monitor. */
+    --xwb-type-display:     2.65rem;
+    --xwb-type-page-title:  1.9rem;
+    --xwb-type-title:       1.45rem;
+    --xwb-type-section:     1.15rem;
+    --xwb-type-subsection:  1rem;
+    --xwb-type-lede:        0.95rem;
+    --xwb-type-body:        0.8125rem;
+    --xwb-type-compact:     0.75rem;
+    --xwb-type-code:        0.6875rem;
+    --xwb-type-label:       0.6875rem;
+    --xwb-type-metadata:    0.625rem;
+
+    background: #ffffff;
+    color: #09151c;
+    --xwb-text-primary: #09151c;
+    --xwb-text-secondary: #556079;
+    --xwb-surface-primary: #ffffff;
+    --xwb-surface-secondary: #f2f4f6;
+  }
+  .xwb-shell { max-width: none; padding: 0; gap: var(--xwb-space-10); min-height: 0; }
+  .xwb-skip-link { display: none; }
+
+  /* A band bleeds to the page edge on screen by pulling against the shell
+     gutter. In print the shell has no gutter, so the pull would drag it off
+     the page. */
+  .xwb-band { margin-inline: 0; }
+
+  /* At 13px the 66ch measure runs long on paper, where the reader is closer. */
+  .xwb-reading, .xwb-lede, .xwb-note, .xwb-caption { max-width: 74ch; }
+
+  /* The remaining fluid sizes, pinned for the same reason. */
+  .xwb-stat-value { font-size: 1.75rem; }
+  .xwb-stat-strip[data-scale="secondary"] .xwb-stat-value { font-size: 1.15rem; }
+  .xwb-result-value { font-size: 1.55rem; }
+
+  /* Keep small, indivisible blocks whole. Do NOT add .xwb-section or
+     .xwb-table-wrap here: a long section or a twenty-row table cannot honour
+     it, so the browser pushes the whole thing to the next page and leaves most
+     of the current one blank. Let those flow and protect the rows instead. */
+  .xwb-chart, .xwb-stat-strip, .xwb-note, .xwb-slide-card,
+  .xwb-comparison > *, .xwb-stat { break-inside: avoid; }
+  .xwb-table-wrap tr, .xwb-custom-links li { break-inside: avoid; }
+  .xwb-table-wrap caption { break-after: avoid; }
+  .xwb-title, .xwb-display, .xwb-heading-24, .xwb-heading-20,
+  .xwb-heading-16, .xwb-subhead { break-after: avoid; }
+  /* Nothing may be wider than the printable area.
+
+     If any element overflows the page box, Chrome silently shrink-to-fits the
+     ENTIRE page, scaling every glyph on it. Two documents from the same
+     stylesheet then print at different sizes, and the one with the widest table
+     looks smallest. That is invisible in the CSS and easy to misread as a type
+     bug. A page-owned `min-width` on a wide reference table is the usual cause,
+     so it is neutralised here rather than left to each artifact to remember. */
+  .xwb-table-wrap { overflow: visible; }
+  .xwb-table-wrap > table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    table-layout: auto;
+  }
+  .xwb-table-wrap th, .xwb-table-wrap td { max-width: none; }
+  .xwb-code, .xwb-formula { max-width: 100%; white-space: pre-wrap; word-break: break-word; }
+  .xwb-report * { max-width: 100%; }
+  thead { display: table-header-group; }
+  tr, li, p { orphans: 2; widows: 2; }
+
+  /* Links are not clickable on paper; give the reader the address. */
+  .xwb-sources a[href^="http"]::after,
+  .xwb-custom-links a[href^="http"]::after { content: ""; }
+
+  a { text-decoration-color: currentColor; }
+}
+
+/* --------------------------------------------------------------------------
+   17. WORDMARK ASSET
+
+   The Xweather lockup as a mask, so it paints in currentColor and is correct
+   on light, dark and contrast grounds from one asset. Do not swap in a
+   colour-baked PNG or SVG, redraw the mark, or apply it as a background-image.
+   -------------------------------------------------------------------------- */
+
+:root {
+  --xwb-wordmark-src: url("data:image/svg+xml,<svg width='161' height='40' viewBox='0 0 161 40' fill='none' xmlns='http://www.w3.org/2000/svg'><g clip-path='url(%23clip0_2401_7115)'><path d='M88.2091 31.243C87.0631 33.201 85.3315 33.9349 82.4833 33.9349C78.0999 33.9349 75.4844 31.1465 75.4844 26.6894V24.5747C75.4844 20.0212 77.6774 17.3936 81.9631 17.3936C86.2488 17.3936 88.4418 19.9891 88.4418 24.5747V26.2435H78.1039V26.6921C78.1039 29.4483 79.4465 31.63 82.2907 31.63C84.4155 31.63 85.4959 31.0206 86.1833 29.8367L88.2131 31.2483L88.2091 31.2416V31.243ZM78.0999 23.9962H85.7861C85.6551 21.3042 84.4436 19.6998 81.9591 19.6998C79.4746 19.6998 78.2631 21.3337 78.0999 23.9962Z' fill='black'/><path d='M96.9009 24.4134H100.793V22.5558C100.793 20.2804 99.713 19.7675 97.163 19.7675C95.1986 19.7675 94.1543 19.9282 93.2383 21.4041L91.274 20.0568C92.4199 18.1952 94.0888 17.397 97.1964 17.397C101.351 17.397 103.413 18.7121 103.413 22.5599V33.6852H100.795V32.1129C99.8775 33.5888 98.7689 33.9423 96.6401 33.9423C92.8465 33.9423 90.7832 32.1129 90.7832 29.0031C90.7832 25.5411 93.3011 24.4174 96.9022 24.4174V24.4148L96.9009 24.4134ZM100.792 26.5951H96.8995C94.3161 26.5951 93.4001 27.4616 93.4001 29.062C93.4001 30.8593 94.7092 31.5624 96.6374 31.5624C99.0564 31.5624 100.792 31.1138 100.792 27.5219V26.5911V26.5937V26.5951Z' fill='black'/><path d='M105.745 17.6489H107.837V14.1226H110.452V17.6489H114.214V19.9564H110.452V28.1005C110.452 30.3117 110.714 31.2425 112.905 31.2425H114.214V33.6786H112.806C108.946 33.6786 107.833 32.0741 107.833 28.7394V19.9537H105.741V17.6462L105.744 17.6489H105.745Z' fill='black'/><path d='M116.906 11.5552H119.524V19.2185C120.342 17.9997 121.488 17.389 123.907 17.389C127.407 17.389 129.862 19.1863 129.862 23.6756V33.6773H127.242V23.7037C127.242 20.4653 125.445 19.7595 123.514 19.7595C121.062 19.7595 119.524 21.4604 119.524 23.6716V33.6732H116.906V11.5552Z' fill='black'/><path d='M145.589 31.243C144.443 33.201 142.711 33.9349 139.863 33.9349C135.479 33.9349 132.864 31.1465 132.864 26.6894V24.5747C132.864 20.0212 135.058 17.3936 139.342 17.3936C143.627 17.3936 145.821 19.9891 145.821 24.5747V26.2435H135.483V26.6921C135.483 29.4483 136.826 31.63 139.67 31.63C141.795 31.63 142.875 31.0206 143.563 29.8367L145.593 31.2483L145.589 31.2416V31.243ZM135.479 23.9962H143.167C143.036 21.3042 141.824 19.6998 139.34 19.6998C136.855 19.6998 135.644 21.3337 135.479 23.9962Z' fill='black'/><path d='M157.832 21.1108C157.144 20.18 156.294 19.7635 155.085 19.7635C153.091 19.7635 151.586 21.2393 151.586 23.6433V33.6812H148.967V17.6487H151.586V19.221C152.273 18.0974 153.383 17.3916 155.38 17.3916C157.606 17.3916 159.011 18.1295 160.058 19.5733L157.836 21.1108H157.832Z' fill='black'/><path d='M27.0272 0.25657C27.0205 0.224428 26.9938 0.20166 26.9603 0.20166H24.9131C24.881 0.20166 24.8529 0.224428 24.8462 0.25657L22.7161 10.952C22.7081 10.9935 22.7401 11.0323 22.7829 11.0323H24.4732C24.5066 11.0323 24.5347 11.0082 24.54 10.9761L24.8021 9.42656H27.0432L27.3067 10.9761C27.312 11.0082 27.3401 11.0323 27.3735 11.0323H29.0932C29.1359 11.0323 29.168 10.9935 29.16 10.952L27.0272 0.25657ZM25.0655 7.88238L25.8692 3.1427C25.8732 3.11591 25.8973 3.09582 25.924 3.09582C25.9508 3.09582 25.9748 3.11591 25.9788 3.1427L26.7825 7.88238H25.0655Z' fill='black'/><path d='M41.5599 10.952L39.4271 0.25657C39.4204 0.224428 39.3937 0.20166 39.3602 0.20166H37.313C37.2809 0.20166 37.2528 0.224428 37.2461 0.25657L35.116 10.952C35.108 10.9935 35.1401 11.0323 35.1828 11.0323H36.8731C36.9065 11.0323 36.9346 11.0082 36.9399 10.9761L37.202 9.42656H39.4431L39.7066 10.9761C39.7119 11.0082 39.74 11.0323 39.7734 11.0323H41.4931C41.5359 11.0323 41.5679 10.9935 41.5599 10.952ZM37.4641 7.88238L38.2677 3.1427C38.2718 3.11591 38.2958 3.09582 38.3226 3.09582C38.3493 3.09582 38.3734 3.11591 38.3774 3.1427L39.1811 7.88238H37.4641Z' fill='black'/><path d='M10.4647 0.25657C10.458 0.224428 10.4313 0.20166 10.3978 0.20166H8.35059C8.3185 0.20166 8.29042 0.224428 8.28373 0.25657L6.15358 10.952C6.14556 10.9935 6.17765 11.0323 6.22044 11.0323H7.91065C7.94408 11.0323 7.97216 11.0082 7.97751 10.9761L8.2396 9.42656H10.4807L10.7442 10.9761C10.7495 11.0082 10.7776 11.0323 10.811 11.0323H12.5307C12.5734 11.0323 12.6055 10.9935 12.5975 10.952L10.4647 0.25657ZM8.50303 7.88238L9.30668 3.1427C9.31069 3.11591 9.33476 3.09582 9.36151 3.09582C9.38825 3.09582 9.41232 3.11591 9.41633 3.1427L10.22 7.88238H8.50303Z' fill='black'/><path d='M6.38899 0.20166H4.68674C4.65331 0.20166 4.62523 0.225767 4.61988 0.25791L3.29205 8.09264C3.28803 8.11943 3.26396 8.13952 3.23722 8.13952C3.21048 8.13952 3.18641 8.11943 3.1824 8.09264L1.85323 0.25791C1.84788 0.225767 1.8198 0.20166 1.78637 0.20166H0.0707451C0.0172574 0.20166 -0.0108237 0.243178 0.00388544 0.296748L2.13404 10.9788C2.14072 11.0109 2.16747 11.0337 2.2009 11.0337H4.24814C4.28023 11.0337 4.30831 11.0109 4.315 10.9788L6.44248 0.283356C6.45585 0.229785 6.4291 0.20166 6.38899 0.20166Z' fill='black'/><path d='M15.3402 0.20166H13.5845C13.531 0.20166 13.5029 0.241838 13.5029 0.283356V10.9654C13.5029 11.0056 13.5297 11.0323 13.5845 11.0323H15.3402C15.3937 11.0323 15.4071 11.0056 15.4071 10.9654V0.283356C15.4071 0.243178 15.3937 0.20166 15.3402 0.20166Z' fill='black'/><path d='M20.8077 5.43586L19.282 4.28677C18.4984 3.69213 18.4583 3.24616 18.4583 2.6917V2.63813C18.4583 1.92162 18.9437 1.70465 19.4304 1.70465C19.9172 1.70465 20.3344 1.92162 20.3344 2.63813V3.21937C20.3344 3.27294 20.3611 3.30107 20.4012 3.30107H22.1703C22.1998 3.30107 22.2238 3.27696 22.2238 3.24749V2.77473C22.2238 0.949306 21.1567 0.00244141 19.5107 0.00244141C17.8646 0.00244141 16.5942 0.976091 16.5942 2.78812C16.5942 4.26132 17.2829 5.15462 18.2283 5.87113L19.4705 6.81799C20.2261 7.39923 20.4293 7.69655 20.4293 8.44119V8.50815C20.4293 9.33314 19.9158 9.54876 19.4171 9.54876C18.9183 9.54876 18.5131 9.3318 18.5131 8.50815V7.87334C18.5131 7.83584 18.4824 7.80503 18.4449 7.80503H16.6905C16.6531 7.80503 16.6237 7.83584 16.6237 7.872V8.45324C16.6237 10.2787 17.7175 11.2523 19.3783 11.2523C21.1741 11.2523 22.2947 10.2921 22.2947 8.39967C22.2947 7.18227 21.943 6.29032 20.8091 5.43854L20.8077 5.43586Z' fill='black'/><path d='M34.2948 9.22165H32.0938V0.269963C32.0938 0.232463 32.0631 0.20166 32.0256 0.20166H30.2431C30.2057 0.20166 30.1763 0.232463 30.1763 0.268624V10.964C30.1763 11.0015 30.207 11.0323 30.2445 11.0323H34.2948C34.3323 11.0323 34.363 11.0015 34.363 10.964V9.28727C34.363 9.24977 34.3323 9.21897 34.2948 9.21897V9.22165Z' fill='black'/><path d='M55.642 8.06348L48.8799 10.2639L43.4321 19.0321L46.1293 23.3713L55.642 8.06348Z' fill='black'/><path d='M43.4321 29.0271L46.3205 33.6757H51.7147L46.1293 24.6865L43.4321 29.0271Z' fill='black'/><path d='M45.7199 24.0293L43.0228 19.6901L39.7239 14.3799H34.3297L40.327 24.0293L30.4023 40.0001L37.1418 37.8064L37.1405 37.8051L45.7199 24.0293Z' fill='black'/><path d='M71.4476 17.6492L68.1781 28.9995L63.8242 17.6492H61.6339L57.5127 28.9031L54.2004 17.5059L52.3003 20.4871L56.2022 33.6816H58.4942L62.8454 21.6897L67.1953 33.6816H69.4846L74.2276 17.6492H71.4476Z' fill='black'/></g><defs><clipPath id='clip0_2401_7115'><rect width='161' height='40' fill='black'/></clipPath></defs></svg>");
+}
+
+/* --------------------------------------------------------------------------
+   18. CONTRAST BAND IN DARK
+
+   A contrast band must stay a contrast field. On the dark canvas the black
+   band would vanish, so it inverts to light and carries its own nested
+   colours. This is why page CSS must never hand-build a contrast surface:
+   only the published band knows how to survive both themes.
+   -------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .xwb-band[data-tone="contrast"] {
+    background: var(--xwb-black-50);
+    color: var(--xwb-black-900);
+    --xwb-text-primary: var(--xwb-black-900);
+    --xwb-text-secondary: var(--xwb-black-400);
+    --xwb-border-subtle: #e4e9ed;
+    --xwb-border-default: var(--xwb-black-100);
+    --xwb-border-strong: var(--xwb-black-200);
+    --xwb-surface-primary: var(--xwb-black-50);
+    --xwb-surface-secondary: #ffffff;
+    --xwb-focus: var(--xwb-thunder-blue);
+    --xwb-accent: var(--xwb-green-500);
+    --xwb-accent-strong: var(--xwb-green-700);
+    --xwb-action: var(--xwb-ember-500);
+    --xwb-action-hover: var(--xwb-ember-800);
+    --xwb-text-on-action: var(--xwb-black-900);
+    --xwb-text-on-action-hover: #ffffff;
+    --xwb-chart-1: var(--xwb-thunder-blue);
+    --xwb-chart-2: #16649f;
+    --xwb-chart-3: #009ac8;
+    --xwb-chart-4: #1f9544;
+    --xwb-chart-5: #6b52e0;
+    --xwb-chart-6: var(--xwb-ember-800);
+  }
+}
+
+:root[data-theme="dark"] .xwb-band[data-tone="contrast"] {
+  background: var(--xwb-black-50);
+  color: var(--xwb-black-900);
+  --xwb-text-primary: var(--xwb-black-900);
+  --xwb-text-secondary: var(--xwb-black-400);
+  --xwb-border-subtle: #e4e9ed;
+  --xwb-border-default: var(--xwb-black-100);
+  --xwb-border-strong: var(--xwb-black-200);
+  --xwb-surface-primary: var(--xwb-black-50);
+  --xwb-surface-secondary: #ffffff;
+  --xwb-focus: var(--xwb-thunder-blue);
+  --xwb-accent: var(--xwb-green-500);
+  --xwb-accent-strong: var(--xwb-green-700);
+  --xwb-action: var(--xwb-ember-500);
+  --xwb-action-hover: var(--xwb-ember-800);
+  --xwb-text-on-action: var(--xwb-black-900);
+  --xwb-text-on-action-hover: #ffffff;
+  --xwb-chart-1: var(--xwb-thunder-blue);
+  --xwb-chart-2: #16649f;
+  --xwb-chart-3: #009ac8;
+  --xwb-chart-4: #1f9544;
+  --xwb-chart-5: #6b52e0;
+  --xwb-chart-6: var(--xwb-ember-800);
+}
+
+/* --------------------------------------------------------------------------
+   19. SLIDES
+
+   A slide is not a short document. It is a fixed frame with no scroll, read
+   from a distance, in a room where the reader cannot go back. Three things
+   follow, and they drive every rule here:
+
+   - The frame is finite. Content that does not fit is not "below the fold",
+     it is lost. A slide that needs a scrollbar is two slides.
+   - One idea per slide. The eye lands once. A slide with two arguments has
+     the audience choosing which to follow while the speaker talks over both.
+   - Type is read at distance. The scale is roughly three times a document's,
+     and everything is sized in container units so a slide is identical at any
+     projection size.
+
+   Sizing uses cqw, so 1cqw is one percent of the slide's own width. The type
+   scale therefore holds whether the deck is on a laptop, a projector, or a
+   thumbnail, and never needs a transform hack.
+   -------------------------------------------------------------------------- */
+
+.xwb-deck {
+  display: flex;
+  flex-direction: column;
+  gap: var(--xwb-space-8);
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: var(--xwb-space-8) var(--xwb-space-6);
+}
+
+.xwb-slide {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 2.8cqw 3.2cqw;
+  background: var(--xwb-surface-primary);
+  color: var(--xwb-text-primary);
+  border: 1px solid var(--xwb-border-subtle);
+  border-radius: var(--xwb-radius);
+}
+
+/* Grounds. A deck alternates deliberately: dark for turns and conclusions,
+   light for the working slides where evidence is read. */
+.xwb-slide[data-tone="dark"] {
+  background: var(--xwb-black-900);
+  border-color: transparent;
+  --xwb-text-primary: rgba(255, 255, 255, 0.94);
+  --xwb-text-secondary: var(--xwb-black-200);
+  --xwb-border-subtle: rgba(255, 255, 255, 0.10);
+  --xwb-border-default: rgba(255, 255, 255, 0.18);
+  --xwb-border-strong: rgba(255, 255, 255, 0.34);
+  --xwb-surface-secondary: rgba(255, 255, 255, 0.06);
+  --xwb-accent: var(--xwb-green-500);
+  --xwb-accent-strong: var(--xwb-green-500);
+  --xwb-action: var(--xwb-green-500);
+  --xwb-text-on-action: var(--xwb-black-900);
+  --xwb-chart-1: var(--xwb-green-500);
+  --xwb-chart-2: #8fbadd;
+  --xwb-chart-3: #5fd3f9;
+  --xwb-chart-4: #67cb82;
+  --xwb-chart-5: #9994f5;
+  --xwb-chart-6: var(--xwb-ember-500);
+  color: rgba(255, 255, 255, 0.94);
+}
+
+.xwb-slide[data-tone="quiet"] { background: var(--xwb-surface-secondary); }
+
+/* --- Slide furniture --------------------------------------------------- */
+
+.xwb-slide-header,
+.xwb-slide-footer {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2cqw;
+  font-size: 1.15cqw;
+  line-height: 1.3;
+  color: var(--xwb-text-secondary);
+  letter-spacing: var(--xwb-tracking-label);
+}
+
+.xwb-slide-header > *,
+.xwb-slide-footer > * { margin: 0; }
+
+/* The mark sits on the closing slide and the title slide, not on every slide.
+   A wordmark repeated 40 times is wallpaper, not attribution. */
+.xwb-slide-mark {
+  display: block;
+  width: 12cqw;
+  height: 3cqw;
+  background-color: currentColor;
+  -webkit-mask-image: var(--xwb-wordmark-src);
+  mask-image: var(--xwb-wordmark-src);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.xwb-slide-number { font-variant-numeric: tabular-nums; }
+
+/* --- The six-column grid ----------------------------------------------- */
+
+.xwb-slide-body {
+  display: grid;
+  /* Four columns, not six or twelve. At slide scale a column has to be wide
+     enough to hold a real thought: four gives halves, thirds by pairing, and a
+     narrow sidebar, which covers nearly every slide worth making. More tracks
+     only tempt you to put four things where two belong.
+     The column gutter is deliberately wide. On a slide the gutter is what the
+     audience reads as separation, and a tight one makes two columns look like
+     one wrapped paragraph from the back of a room. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 3cqw 4.4cqw;
+  /* Centred by default. A slide frame is fixed, so content that starts at the
+     top leaves a dead band at the bottom of every slide; optically centring the
+     body uses the whole frame. data-align overrides where a slide genuinely
+     wants to hang from the top or sit on the base line. */
+  align-content: center;
+  align-items: start;
+  padding-block: 3cqw 0;
+  min-height: 0;
+}
+
+.xwb-slide-body[data-align="start"] { align-content: start; }
+.xwb-slide-body[data-align="between"] { align-content: space-between; }
+/* Let a child own the full body height, so it can pin its own content to the
+   top and bottom edges. */
+.xwb-slide-body[data-align="stretch"] { align-content: stretch; align-items: stretch; }
+
+/* A column whose content sits at the top and the base, with the air between
+   them doing the work. This is the composition that keeps a sparse slide from
+   looking unfinished without padding it out with filler. */
+.xwb-slide-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2cqw;
+  min-height: 0;
+  min-width: 0;
+}
+.xwb-slide-column > * { margin: 0; }
+.xwb-slide-body[data-align="end"] { align-content: end; }
+
+.xwb-slide-body > * { min-width: 0; margin: 0; }
+.xwb-slide-body > [data-span="1"] { grid-column: span 1; }
+.xwb-slide-body > [data-span="2"] { grid-column: span 2; }
+.xwb-slide-body > [data-span="3"] { grid-column: span 3; }
+.xwb-slide-body > [data-span="4"] { grid-column: 1 / -1; }
+.xwb-slide-body > [data-start="2"] { grid-column-start: 2; }
+.xwb-slide-body > [data-start="3"] { grid-column-start: 3; }
+.xwb-slide-body > [data-start="4"] { grid-column-start: 4; }
+
+/* A column of stacked content inside one grid cell. */
+.xwb-slide-stack { display: flex; flex-direction: column; gap: 1.3cqw; min-width: 0; }
+.xwb-slide-stack > * { margin: 0; }
+
+/* --- Slide type -------------------------------------------------------- */
+
+.xwb-slide-title {
+  font-size: 5.6cqw;
+  font-weight: var(--xwb-weight-light);
+  line-height: 1.04;
+  letter-spacing: var(--xwb-tracking-display);
+  color: var(--xwb-text-primary);
+  text-wrap: balance;
+  margin: 0;
+}
+
+/* A slide's locator: which part of the deck this is, set small and quiet
+   directly above the heading. Sentence case, never all-caps and tracked out.
+   This is the one place a document would use a label and a slide needs a
+   distinct role, because on a slide it also tells a latecomer where they are. */
+.xwb-slide-eyebrow {
+  font-size: 1.15cqw;
+  line-height: 1.3;
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-secondary);
+  margin: 0;
+}
+
+.xwb-slide-heading {
+  font-size: 3.6cqw;
+  font-weight: var(--xwb-weight-regular);
+  line-height: 1.1;
+  letter-spacing: var(--xwb-tracking-title);
+  color: var(--xwb-text-primary);
+  text-wrap: balance;
+  margin: 0;
+}
+
+.xwb-slide-lede {
+  font-size: 2.15cqw;
+  font-weight: var(--xwb-weight-light);
+  line-height: 1.42;
+  letter-spacing: var(--xwb-tracking-lede);
+  color: var(--xwb-text-secondary);
+  text-wrap: pretty;
+  margin: 0;
+}
+
+.xwb-slide-subhead {
+  font-size: 1.9cqw;
+  font-weight: var(--xwb-weight-bold);
+  line-height: 1.25;
+  color: var(--xwb-text-primary);
+  margin: 0;
+}
+
+.xwb-slide-text {
+  font-size: 1.75cqw;
+  line-height: 1.5;
+  color: var(--xwb-text-primary);
+  margin: 0;
+}
+
+.xwb-slide-label {
+  font-size: 1.25cqw;
+  line-height: 1.35;
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-secondary);
+  margin: 0;
+}
+
+/* --- Slide data -------------------------------------------------------- */
+
+.xwb-slide-stat { display: flex; flex-direction: column; gap: 0.4cqw; min-width: 0; }
+.xwb-slide-stat > * { margin: 0; }
+
+.xwb-slide-stat-label {
+  font-size: 1.25cqw;
+  letter-spacing: var(--xwb-tracking-label);
+  color: var(--xwb-text-primary);
+  order: 1;
+}
+
+.xwb-slide-stat-value {
+  font-size: 5cqw;
+  font-weight: var(--xwb-weight-light);
+  line-height: 1;
+  letter-spacing: var(--xwb-tracking-title);
+  font-variant-numeric: tabular-nums;
+  color: var(--xwb-text-primary);
+  order: 2;
+}
+
+.xwb-slide-stat-detail {
+  font-size: 1.15cqw;
+  line-height: 1.35;
+  color: var(--xwb-text-secondary);
+  order: 3;
+}
+
+/* Absolute-sized primitives must be re-expressed in container units inside a
+   slide, or they stay laptop-sized while everything around them scales. */
+.xwb-slide .xwb-badge {
+  font-size: 1.15cqw;
+  padding: 0.3cqw 0.7cqw;
+  border-radius: 0.2cqw;
+  line-height: 1.4;
+}
+
+/* Horizontal rule used to separate a slide's header from its body. */
+.xwb-slide-rule {
+  border: 0;
+  border-top: 1px solid var(--xwb-border-subtle);
+  margin: 0;
+  grid-column: 1 / -1;
+}
+
+/* --- Slide bars, sized in container units so they scale with the frame --- */
+
+.xwb-slide-bars { display: flex; flex-direction: column; gap: 1.5cqw; min-width: 0; }
+
+.xwb-slide-bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5cqw;
+  align-items: baseline;
+}
+
+.xwb-slide-bar-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1cqw;
+  font-size: 1.55cqw;
+  color: var(--xwb-text-primary);
+}
+
+.xwb-slide-bar-value { font-variant-numeric: tabular-nums; }
+
+.xwb-slide-bar-track {
+  position: relative;
+  height: 1.2cqw;
+  background: var(--xwb-surface-secondary);
+  border-radius: var(--xwb-radius-small);
+  overflow: hidden;
+}
+
+.xwb-slide-bar-fill {
+  display: block;
+  height: 100%;
+  width: var(--xwb-bar-length, 0%);
+  background: var(--xwb-chart-1);
+  border-radius: var(--xwb-radius-small);
+}
+
+.xwb-slide-bar[data-emphasis="true"] .xwb-slide-bar-fill { background: var(--xwb-accent-strong); }
+
+/* --- Media -------------------------------------------------------------
+
+   Brand photography is real infrastructure under real weather: roads,
+   substations, turbines, airports. It is evidence of where the data is used,
+   not decoration, so a photograph earns its place on a slide only when the
+   subject is the place the work happens.
+   -------------------------------------------------------------------------- */
+
+.xwb-slide-figure {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8cqw;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+}
+
+.xwb-slide-figure > .xwb-slide-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.45cqw;
+  background: var(--xwb-surface-secondary);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.xwb-slide-figure[data-ratio="wide"] > .xwb-slide-frame { aspect-ratio: 16 / 10; flex: none; }
+.xwb-slide-figure[data-ratio="square"] > .xwb-slide-frame { aspect-ratio: 1 / 1; flex: none; }
+.xwb-slide-figure[data-ratio="tall"] > .xwb-slide-frame { aspect-ratio: 3 / 4; flex: none; }
+
+.xwb-slide-figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.xwb-slide-figure figcaption {
+  font-size: 1.15cqw;
+  line-height: 1.35;
+  color: var(--xwb-text-secondary);
+  margin: 0;
+}
+
+/* Full-bleed photograph behind a slide.
+
+   The scrim is deliberately heavy on the side that carries the text. design.md
+   asks for a solid or near-solid ground under type, not a hopeful overlay, and
+   a 40% wash over a bright sky is exactly the hopeful overlay it means. Text
+   sits in the opaque end of the gradient, never across the middle of it. */
+.xwb-slide[data-media="full"] { border-color: transparent; }
+
+.xwb-slide-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.xwb-slide-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.xwb-slide-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    rgba(9, 21, 28, 0.96) 0%,
+    rgba(9, 21, 28, 0.92) 34%,
+    rgba(9, 21, 28, 0.62) 62%,
+    rgba(9, 21, 28, 0.38) 100%
+  );
+}
+
+.xwb-slide-media[data-scrim="base"]::after {
+  background: linear-gradient(
+    to top,
+    rgba(9, 21, 28, 0.96) 0%,
+    rgba(9, 21, 28, 0.88) 30%,
+    rgba(9, 21, 28, 0.45) 62%,
+    rgba(9, 21, 28, 0.25) 100%
+  );
+}
+
+/* Everything else on the slide rides above the media layer. */
+.xwb-slide[data-media] > .xwb-slide-header,
+.xwb-slide[data-media] > .xwb-slide-body,
+.xwb-slide[data-media] > .xwb-slide-footer { position: relative; z-index: 1; }
+
+/* --- Section index ------------------------------------------------------
+
+   The large numeral on a divider slide. It is a locator, so it stays quiet:
+   secondary text, never the accent, never a filled circle. */
+.xwb-slide-index {
+  font-size: 5.6cqw;
+  font-weight: var(--xwb-weight-light);
+  line-height: 1;
+  letter-spacing: var(--xwb-tracking-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--xwb-text-secondary);
+  margin: 0;
+}
+
+.xwb-slide-divider {
+  display: flex;
+  align-items: baseline;
+  gap: 2.2cqw;
+  min-width: 0;
+}
+.xwb-slide-divider > * { margin: 0; }
+
+/* --- Tonal card mosaic --------------------------------------------------
+
+   A set of cards at different tonal values, sized unevenly on purpose so the
+   block reads as a composition rather than a row of equal boxes. Use it for a
+   handful of related figures or claims where each is a headline in itself and
+   none is a table row. Tone carries emphasis: quiet for context, contrast for
+   the one that matters, accent when the point is opportunity.
+
+   Not a replacement for a chart. If the numbers share a scale and the reader
+   should compare them, that is bars.
+   -------------------------------------------------------------------------- */
+
+.xwb-slide-cards {
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+  gap: 1.2cqw;
+  min-height: 0;
+  min-width: 0;
+}
+
+.xwb-slide-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1cqw;
+  min-width: 0;
+  padding: 1.5cqw 1.6cqw;
+  border-radius: 0.45cqw;
+  background: var(--xwb-surface-secondary);
+  color: var(--xwb-text-primary);
+}
+.xwb-slide-card > * { margin: 0; }
+.xwb-slide-card[data-rows="2"] { grid-row: span 2; }
+.xwb-slide-card[data-rows="3"] { grid-row: span 3; }
+
+.xwb-slide-card[data-tone="mid"] {
+  background: var(--xwb-accent-quiet);
+}
+.xwb-slide-card[data-tone="accent"] {
+  background: var(--xwb-green-500);
+  color: var(--xwb-black-900);
+}
+.xwb-slide-card[data-tone="contrast"] {
+  background: var(--xwb-black-900);
+  color: rgba(255, 255, 255, 0.94);
+  --xwb-text-primary: rgba(255, 255, 255, 0.94);
+  --xwb-text-secondary: var(--xwb-black-200);
+}
+
+/* --- Roadmap track ------------------------------------------------------ */
+
+.xwb-slide-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 4.4cqw;
+  border-top: 1px solid var(--xwb-border-strong);
+  padding-top: 1.6cqw;
+  grid-column: 1 / -1;
+}
+
+.xwb-slide-track > * {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8cqw;
+  min-width: 0;
+  position: relative;
+}
+
+.xwb-slide-track > *::before {
+  content: "";
+  position: absolute;
+  top: calc(-1.6cqw - 1px);
+  left: 0;
+  width: 1.2cqw;
+  height: 2px;
+  background: var(--xwb-text-primary);
+}
+
+.xwb-slide-track > [data-state="later"]::before { background: var(--xwb-border-strong); }
+.xwb-slide-track > * > * { margin: 0; }
+
+/* --- Print: one slide per landscape page -------------------------------- */
+
+/* A NAMED page, so a deck can print at true 16:9 without reformatting every
+   document that shares this stylesheet. 13.333in by 7.5in is the same frame
+   PowerPoint and Keynote use for widescreen, so a printed deck and a native
+   one are the same shape. */
+@page slide {
+  size: 13.333in 7.5in;
+  margin: 0;
+}
+
+@media print {
+  .xwb-deck { max-width: none; padding: 0; gap: 0; }
+
+  .xwb-slide {
+    /* Step every slide weight down one.
+
+       `-webkit-font-smoothing: antialiased` thins strokes on macOS, but only
+       when the text is being rasterised to a screen. PDF text is vector, so the
+       hint does not apply and the true weight comes through, which reads
+       heavier than the browser did. This is the same mismatch that makes an
+       untreated PowerPoint export look bold, and it has the same fix.
+
+       Every slide type role reads these tokens, so redefining them here covers
+       headings, subheads, labels, badges, roadmap lanes, and stats at once.
+       Light stays at 300 because the web fonts ship nothing lighter, and Bold
+       lands on 400, which still reads as emphasis against 300 around it.
+
+       Scoped to slides deliberately. A document prints its body at about
+       9.75pt, where Light is too thin to hold on paper, so documents keep the
+       screen weights. */
+    --xwb-weight-regular: 300;
+    --xwb-weight-bold: 400;
+    /* Redefining the token is not enough on its own. `.xwb-report` sets
+       `font-weight: var(--xwb-weight-regular)` on the body, where it computes
+       to 400 and is then INHERITED as a computed value by everything inside.
+       Changing the token further down does not reach back and alter what has
+       already been inherited, so anything that does not declare its own weight
+       (headers, footers, plain runs of text) would stay at 400. Restating the
+       weight here re-resolves it against the new token. */
+    font-weight: var(--xwb-weight-regular);
+
+    page: slide;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    border: 0;
+    border-radius: 0;
+    break-after: page;
+    break-inside: avoid;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
+  .xwb-slide:last-child { break-after: auto; }
+
+  /* The scrim is a pseudo-element gradient. Pseudo-elements do not inherit the
+     root's colour-adjust in every engine, so it is repeated where it matters. */
+  .xwb-slide-media,
+  .xwb-slide-media::after,
+  .xwb-slide-card,
+  .xwb-badge,
+  .xwb-roadmap-bar,
+  .xwb-roadmap-cols > span,
+  .xwb-slide-bar-fill,
+  .xwb-bar-fill {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   20. SWIMLANE ROADMAP  (slides)
+
+   A roadmap grid: work items as bars on a shared quarter scale, grouped into
+   lanes by product area. It answers two questions a track or a list cannot,
+   namely what runs concurrently and what has to finish before something else
+   starts. If neither question is being asked, a track is simpler and better.
+
+   Colour here is categorical, not severity. It groups bars by lane so the eye
+   can follow one product area across the quarters; it does not mean good or
+   bad. Every bar carries its own label, so the colour is never the only signal.
+
+   Authoring: set --q to the number of quarters, --at to where the today line
+   falls in quarter units. Each bar sets --a and --b as grid lines on that
+   scale, and --r as its row within the lane.
+   -------------------------------------------------------------------------- */
+
+.xwb-roadmap {
+  --q: 4;
+  --lane-w: 15cqw;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* A slide frame is finite, and a roadmap is the primitive most likely to forget
+   it: one more lane is one more row, and the last one ends up under the footer.
+   If a roadmap does not fit, cut lanes or split the slide. Do not shrink the
+   type until it fits, and do not let it overflow. */
+.xwb-roadmap > * { flex: none; }
+
+/* Column shading, laid behind everything so the quarters stay legible across
+   an entire deck of lanes without ruling each row. */
+.xwb-roadmap-cols {
+  position: absolute;
+  inset: 0 0 0 var(--lane-w);
+  display: grid;
+  grid-template-columns: repeat(var(--q), minmax(0, 1fr));
+  z-index: 0;
+  pointer-events: none;
+}
+.xwb-roadmap-cols > span:nth-child(odd) { background: var(--xwb-surface-secondary); }
+
+/* Today. A dashed rule, because a solid one reads as a boundary in the data. */
+.xwb-roadmap-today {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  border-left: 2px dashed var(--xwb-text-primary);
+  left: calc(var(--lane-w) + (100% - var(--lane-w)) * var(--at) / var(--q));
+  pointer-events: none;
+}
+
+.xwb-roadmap-head,
+.xwb-roadmap-lane {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: var(--lane-w) repeat(var(--q), minmax(0, 1fr));
+  align-items: start;
+}
+
+.xwb-roadmap-head {
+  border-bottom: 2px solid var(--xwb-text-primary);
+  padding-bottom: 0.45cqw;
+}
+
+.xwb-roadmap-q {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6cqw;
+  padding-left: 0.8cqw;
+  min-width: 0;
+}
+.xwb-roadmap-q b {
+  font-size: 1.4cqw;
+  font-weight: var(--xwb-weight-regular);
+  color: var(--xwb-text-primary);
+}
+.xwb-roadmap-q i {
+  font-style: normal;
+  font-size: 1.1cqw;
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-roadmap-lane { padding-block: 0.45cqw; border-bottom: 1px solid var(--xwb-border-subtle); }
+
+/* A heavy rule opens a new product area. */
+.xwb-roadmap-lane[data-group="start"] { border-top: 2px solid var(--xwb-text-primary); }
+
+.xwb-roadmap-lane-label {
+  margin: 0;
+  padding-right: 1cqw;
+  font-size: 1.1cqw;
+  line-height: 1.35;
+  color: var(--xwb-text-secondary);
+  min-width: 0;
+}
+.xwb-roadmap-lane-label b {
+  display: block;
+  font-size: 1.5cqw;
+  font-weight: var(--xwb-weight-bold);
+  color: var(--xwb-text-primary);
+}
+
+.xwb-roadmap-bars {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-columns: repeat(var(--q), minmax(0, 1fr));
+  gap: 0.35cqw 0;
+  min-width: 0;
+}
+
+.xwb-roadmap-bar {
+  grid-column: var(--a) / var(--b);
+  grid-row: var(--r, auto);
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding: 0.35cqw 0.7cqw;
+  border-radius: 0.3cqw;
+  font-size: 1.15cqw;
+  line-height: 1.3;
+  background: var(--xwb-lane-1-bg);
+  color: var(--xwb-lane-1-fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.xwb-roadmap-bar[data-lane="2"] { background: var(--xwb-lane-2-bg); color: var(--xwb-lane-2-fg); }
+.xwb-roadmap-bar[data-lane="3"] { background: var(--xwb-lane-3-bg); color: var(--xwb-lane-3-fg); }
+.xwb-roadmap-bar[data-lane="4"] { background: var(--xwb-lane-4-bg); color: var(--xwb-lane-4-fg); }
+
+/* --------------------------------------------------------------------------
+   21. SLIDE LISTS
+
+   A list belongs on a slide only when the items are genuinely discrete and
+   genuinely parallel: capabilities, criteria, deliverables, exclusions. Each
+   item is a noun phrase the audience can take in at a glance, not a sentence
+   the speaker is about to read aloud. If the items are sentences, they are
+   speaker notes.
+
+   The marker is a short rule rather than a dot, so a list reads as a set of
+   named things rather than a bulleted outline.
+   -------------------------------------------------------------------------- */
+
+.xwb-slide-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9cqw;
+  min-width: 0;
+}
+
+.xwb-slide-list > li {
+  position: relative;
+  padding-left: 2.4cqw;
+  font-size: 1.55cqw;
+  line-height: 1.35;
+  color: var(--xwb-text-primary);
+}
+
+.xwb-slide-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 1.4cqw;
+  height: 1px;
+  background: var(--xwb-border-strong);
+}
+
+/* A trailing qualifier on an item: what it does not include, or when it lands. */
+.xwb-slide-list > li > span {
+  display: block;
+  font-size: 1.15cqw;
+  line-height: 1.35;
+  color: var(--xwb-text-secondary);
+  margin-top: 0.2cqw;
+}
+
+.xwb-slide-list[data-marker="none"] > li { padding-left: 0; }
+.xwb-slide-list[data-marker="none"] > li::before { content: none; }

@@ -1,0 +1,11 @@
+apis:
+  weather-api:
+    root: weather-api.yaml
+  weather-api-3-1:
+    root: weather-api-3.1.yaml
+extends:
+  - recommended
+rules:
+  no-invalid-media-type-examples:
+    severity: error
+    allowAdditionalProperties: true

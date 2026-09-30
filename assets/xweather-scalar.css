@@ -1,0 +1,400 @@
+/*
+ * Xweather theme for the Scalar API reference.
+ *
+ * brand.css owns the tokens, fonts and light/dark resolution. This file only
+ * maps Scalar's theme variables onto those public tokens and styles the page
+ * masthead and footer. Scalar injects its component CSS at runtime, after
+ * this file, so component rules carry a :root prefix to win specificity ties.
+ *
+ * index.html mirrors Scalar's body class (light-mode/dark-mode) onto
+ * <html data-theme>, so every --xwb-* token below resolves for the same
+ * theme Scalar is rendering.
+ */
+
+/* Type, weight and shape ------------------------------------------------ */
+
+html:root {
+  --scalar-font: var(--xwb-font-sans);
+  --scalar-font-code: var(--xwb-font-mono);
+
+  /* Vaisala Sans ships Light, Regular and Bold only. Scalar's 500 and 600
+     would be synthesized, so they resolve to real faces. */
+  --scalar-regular: var(--xwb-weight-regular);
+  --scalar-font-normal: var(--xwb-weight-regular);
+  --scalar-semibold: var(--xwb-weight-regular);
+  --scalar-font-medium: var(--xwb-weight-regular);
+  --scalar-bold: var(--xwb-weight-bold);
+  --scalar-font-bold: var(--xwb-weight-bold);
+  --scalar-sidebar-font-weight: var(--xwb-weight-regular);
+  --scalar-sidebar-font-weight-active: var(--xwb-weight-regular);
+  --scalar-link-font-weight: inherit;
+
+  --scalar-heading-1: var(--xwb-type-section);
+  --scalar-heading-2: var(--xwb-type-subsection);
+  --scalar-heading-3: var(--xwb-type-body);
+  --scalar-heading-4: var(--xwb-type-body);
+  --scalar-heading-5: var(--xwb-type-body);
+  --scalar-heading-6: var(--xwb-type-body);
+  --scalar-page-description: var(--xwb-type-body);
+  --scalar-paragraph: var(--xwb-type-body);
+  --scalar-small: var(--xwb-type-compact);
+  --scalar-mini: var(--xwb-type-label);
+  --scalar-micro: var(--xwb-type-metadata);
+  --scalar-font-size-1: var(--xwb-type-subsection);
+  --scalar-font-size-2: var(--xwb-type-body);
+  --scalar-font-size-3: var(--xwb-type-compact);
+  --scalar-font-size-4: var(--xwb-type-label);
+  --scalar-font-size-5: var(--xwb-type-metadata);
+  --scalar-font-size-6: var(--xwb-type-metadata);
+
+  /* Nothing in an Xweather surface is rounder than 4px, including pills. */
+  --scalar-radius: var(--xwb-radius-small);
+  --scalar-radius-max: var(--xwb-radius);
+  --scalar-radius-full: var(--xwb-radius);
+  --scalar-border-width: 1px;
+
+  --scalar-text-decoration: underline;
+  --scalar-text-decoration-hover: underline;
+}
+
+/* Colour ---------------------------------------------------------------- */
+
+:root .light-mode,
+:root .dark-mode {
+  --scalar-background-1: var(--xwb-surface-primary);
+  --scalar-background-2: var(--xwb-surface-secondary);
+  --scalar-background-3: color-mix(in srgb, var(--xwb-surface-secondary), var(--xwb-text-primary) 7%);
+  --scalar-background-4: color-mix(in srgb, var(--xwb-surface-secondary), var(--xwb-text-primary) 12%);
+  --scalar-background-card: var(--xwb-surface-primary);
+  --scalar-background-accent: var(--xwb-accent-quiet);
+
+  /* Secondary text is the brand's AA-safe grey. There is no fainter text
+     step, because Misty Gray fails AA for copy. */
+  --scalar-color-1: var(--xwb-text-primary);
+  --scalar-color-2: var(--xwb-text-secondary);
+  --scalar-color-3: var(--xwb-text-secondary);
+  --scalar-color-ghost: var(--xwb-text-secondary);
+  --scalar-color-disabled: var(--xwb-border-strong);
+
+  --scalar-border-color: var(--xwb-border-default);
+
+  --scalar-link-color: var(--xwb-text-primary);
+  --scalar-link-color-hover: var(--xwb-text-primary);
+  --scalar-link-color-visited: var(--xwb-text-primary);
+  --scalar-text-decoration-color: var(--xwb-border-strong);
+  --scalar-text-decoration-color-hover: currentColor;
+
+  /* The primary action follows the ground: Ember on light, Misty Green on
+     dark. Hover text is handled below because the pair flips on light. */
+  --scalar-button-1: var(--xwb-action);
+  --scalar-button-1-hover: var(--xwb-action-hover);
+  --scalar-button-1-color: var(--xwb-text-on-action);
+
+  /* Scalar sets these hues as text: method names, response codes and
+     "required". The raw status colours fail AA as text on light (warning
+     2.96:1, caution 1.78:1), so they use the brand's text-grade severity
+     foregrounds, which clear AA on both grounds. */
+  --scalar-color-green: var(--xwb-badge-success-fg);
+  --scalar-color-red: var(--xwb-badge-error-fg);
+  --scalar-color-orange: var(--xwb-badge-warning-fg);
+  --scalar-color-yellow: var(--xwb-badge-caution-fg);
+  --scalar-color-blue: var(--xwb-badge-info-fg);
+  --scalar-color-purple: var(--xwb-chart-5);
+  --scalar-color-query: var(--xwb-chart-5);
+  --scalar-color-danger: var(--xwb-badge-error-fg);
+  --scalar-background-danger: var(--xwb-badge-error-bg);
+  --scalar-color-alert: var(--xwb-badge-warning-fg);
+  --scalar-background-alert: var(--xwb-badge-warning-bg);
+
+  --scalar-sidebar-background-1: var(--xwb-surface-secondary);
+  --scalar-sidebar-border-color: transparent;
+  --scalar-sidebar-color-1: var(--xwb-text-primary);
+  --scalar-sidebar-color-2: var(--xwb-text-secondary);
+  --scalar-sidebar-color-active: var(--xwb-text-primary);
+  --scalar-sidebar-item-hover-color: var(--xwb-text-primary);
+  --scalar-sidebar-item-hover-background: var(--xwb-border-subtle);
+  --scalar-sidebar-item-active-background: var(--xwb-accent-quiet);
+  --scalar-sidebar-search-background: var(--xwb-surface-primary);
+  --scalar-sidebar-search-border-color: var(--xwb-border-default);
+  --scalar-sidebar-search-color: var(--xwb-text-secondary);
+  --scalar-sidebar-indent-border: var(--xwb-border-default);
+  --scalar-sidebar-indent-border-hover: var(--xwb-border-strong);
+  --scalar-sidebar-indent-border-active: var(--xwb-text-primary);
+
+  --scalar-tooltip-background: var(--xwb-surface-contrast);
+  --scalar-tooltip-color: var(--xwb-text-on-contrast);
+
+  --scalar-scrollbar-color: var(--xwb-border-default);
+  --scalar-scrollbar-color-active: var(--xwb-border-strong);
+
+  /* Elevation only where a menu or dialog floats over content. */
+  --scalar-shadow-1: 0 0 0 1px var(--xwb-border-default);
+  --scalar-shadow-2: 0 0 0 1px var(--xwb-border-default), 0 8px 24px rgb(9 21 28 / 0.12);
+}
+
+/* Misty Green disappears on white (1.58:1), so the light accent is Thunder
+   Blue. On Xweather Black the accent is Misty Green. */
+/* Scalar also sets an accent directly on its nested dark-mode elements, so
+   they are named here as well as the body. */
+:root body.light-mode,
+:root body.light-mode .dark-mode {
+  --scalar-color-accent: var(--xwb-thunder-blue);
+}
+:root body.dark-mode,
+:root body.dark-mode .dark-mode {
+  --scalar-color-accent: var(--xwb-accent);
+  --scalar-shadow-2: 0 0 0 1px var(--xwb-border-default), 0 8px 24px rgb(0 0 0 / 0.4);
+}
+
+/* Scalar puts its own dark-mode class on every request example, to make
+   each one a dark block. A contrast surface cannot repeat, so on a light
+   page those examples stay light: the colour tokens already follow the page,
+   and this undoes the rest of Scalar's dark switch. */
+:root body.light-mode .dark-mode {
+  --scalar-backdrop-brightness: 1;
+  --scalar-lifted-brightness: 1;
+}
+/* Scalar forces color-scheme with a layered !important. An !important rule
+   in a layer declared earlier than Scalar's is the only thing that wins. */
+@layer xwb-scalar-overrides {
+  body.light-mode .dark-mode {
+    color-scheme: light !important;
+  }
+}
+
+/* Scalar component details ---------------------------------------------- */
+
+:root .scalar-app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* The document title is the one Light, display-voice heading. */
+:root .scalar-app h1.section-header-label {
+  font-size: var(--xwb-type-title);
+  font-weight: var(--xwb-weight-light);
+  line-height: var(--xwb-leading-title);
+  letter-spacing: var(--xwb-tracking-title);
+}
+
+/* Section and operation headings stay Regular. */
+:root .scalar-app .section-header-label:not(h1),
+:root .scalar-app .markdown :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: var(--xwb-weight-regular);
+  letter-spacing: var(--xwb-tracking-heading);
+}
+
+/* Buttons are never Bold. The light hover fill is Ember dark, which needs
+   white text rather than the resting Xweather Black. */
+:root .scalar-app .scalar-button {
+  font-weight: var(--xwb-weight-regular);
+}
+:root .scalar-app .scalar-button-solid:hover {
+  color: var(--xwb-text-on-action-hover);
+}
+
+/* Request and response examples ----------------------------------------- */
+
+/* The request is the command a reader copies or sends. It is one quiet
+   fill with no border, because the fill is already the container. */
+:root .scalar-app .request-card {
+  background: var(--xwb-surface-secondary);
+  border-color: transparent;
+}
+:root .scalar-app .request-card .request-card-footer {
+  background: transparent;
+}
+
+/* The response is example output. It sits on the page canvas inside a
+   hairline, so it reads as a different object from the request. */
+:root .scalar-app .response-card {
+  --scalar-background-2: var(--xwb-surface-primary);
+  background: var(--xwb-surface-primary);
+  border-color: var(--xwb-border-default);
+}
+/* The brand's peer-block gap, up from Scalar's 12px. */
+:root .scalar-app .examples > .request-card + .response-card {
+  margin-top: var(--xwb-space-5);
+}
+
+/* "Test Request" repeats on every operation, so it is not the page's one
+   primary action, and Ember is reserved for that. It uses the brand's
+   default button instead: Xweather Black on light, near-white on dark. */
+:root .scalar-app .show-api-client-button {
+  background: var(--xwb-text-primary);
+  color: var(--xwb-surface-primary);
+  border-radius: var(--xwb-radius);
+}
+:root .scalar-app .show-api-client-button :is(span, svg) {
+  color: inherit;
+}
+:root body.light-mode .scalar-app .show-api-client-button:hover {
+  background: var(--xwb-black-700);
+}
+/* brand.css's own hover (black-700) would put dark text on a dark fill
+   here, so dark mode steps down to the secondary text colour instead. */
+:root body.dark-mode .scalar-app .show-api-client-button:hover {
+  background: var(--xwb-text-secondary);
+}
+
+/* Mono runs a step smaller than the sans around them. */
+:root .scalar-app .markdown :not(pre) > code {
+  font-size: calc(1em * var(--xwb-mono-ratio));
+}
+
+/* Method labels repeat on every sidebar row, so they stay neutral; the word
+   carries the method, and colour is kept for response severity. */
+:root .scalar-app .sidebar-heading-type {
+  --method-color: var(--xwb-text-secondary) !important;
+  font-size: calc(var(--xwb-type-label) * var(--xwb-mono-ratio));
+  font-weight: var(--xwb-weight-regular);
+}
+:root .scalar-app .sidebar-heading-type-active {
+  --method-color: var(--xwb-text-primary) !important;
+}
+
+/* "Required" is a constraint, not a severity. Primary text against the
+   secondary text of optional fields carries the difference. */
+:root .scalar-app .property-required {
+  color: var(--xwb-text-primary);
+}
+
+/* Code samples use the categorical data palette, not severity colours.
+   Each clears AA on the code block ground in both themes. */
+:root .scalar-app :is(.hljs-string, .hljs-regexp, .hljs-built_in, .hljs-subst, .hljs-name) {
+  color: var(--xwb-chart-2);
+}
+:root .scalar-app :is(.hljs-number, .hljs-keyword) {
+  color: var(--xwb-chart-5);
+}
+:root .scalar-app :is(.hljs-literal, .hljs-type, .hljs-addition, .hljs-selector-tag) {
+  color: var(--xwb-chart-1);
+}
+:root .scalar-app .hljs-title.function_ {
+  color: var(--xwb-text-primary);
+}
+
+:root .scalar-app ::selection {
+  background: var(--xwb-accent);
+  color: var(--xwb-black-900);
+}
+
+:root .scalar-app :focus-visible {
+  outline-color: var(--xwb-focus);
+}
+
+/* Page masthead and footer ---------------------------------------------- */
+
+body {
+  margin: 0;
+  background: var(--xwb-surface-primary);
+  color: var(--xwb-text-primary);
+}
+
+.xwb-custom-masthead,
+.xwb-custom-footer,
+.xwb-custom-fallback {
+  font-family: var(--xwb-font-sans);
+  font-weight: var(--xwb-weight-regular);
+  letter-spacing: var(--xwb-tracking-body);
+  color: var(--xwb-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.xwb-custom-masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--xwb-space-4) var(--xwb-space-10);
+  /* 20px matches the text edge of Scalar's sidebar items below. */
+  padding: var(--xwb-space-5);
+  background: var(--xwb-surface-primary);
+  border-bottom: 1px solid var(--xwb-border-subtle);
+  font-size: var(--xwb-type-compact);
+  line-height: var(--xwb-leading-compact);
+}
+
+.xwb-custom-identity {
+  display: flex;
+  align-items: center;
+  gap: var(--xwb-space-4);
+  margin-right: auto;
+}
+
+.xwb-custom-product {
+  padding-left: var(--xwb-space-4);
+  border-left: 1px solid var(--xwb-border-default);
+  font-size: var(--xwb-type-body);
+  white-space: nowrap;
+}
+
+.xwb-custom-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--xwb-space-2) var(--xwb-space-10);
+}
+
+.xwb-custom-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--xwb-space-2) var(--xwb-space-5);
+  padding: 0;
+  list-style: none;
+}
+.xwb-custom-links > .xwb-custom-group { margin: 0; }
+.xwb-custom-group > li { margin: 0; }
+
+.xwb-custom-group-name {
+  color: var(--xwb-text-secondary);
+  font-size: var(--xwb-type-label);
+}
+
+.xwb-custom-masthead a,
+.xwb-custom-footer a,
+.xwb-custom-fallback a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--xwb-border-strong);
+  text-underline-offset: 0.18em;
+}
+.xwb-custom-masthead a:hover,
+.xwb-custom-footer a:hover,
+.xwb-custom-fallback a:hover {
+  text-decoration-color: currentColor;
+}
+
+.xwb-custom-masthead :focus-visible,
+.xwb-custom-footer :focus-visible,
+.xwb-custom-fallback :focus-visible {
+  outline: 2px solid var(--xwb-focus);
+  outline-offset: 2px;
+  border-radius: var(--xwb-radius-small);
+}
+
+.xwb-custom-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--xwb-space-4) var(--xwb-space-10);
+  padding: var(--xwb-space-10) var(--xwb-space-5);
+  font-size: var(--xwb-type-label);
+  line-height: var(--xwb-leading-caption);
+  color: var(--xwb-text-secondary);
+}
+
+.xwb-custom-fallback {
+  max-width: var(--xwb-measure);
+  padding: var(--xwb-space-10) var(--xwb-space-5);
+  font-size: var(--xwb-type-body);
+  line-height: var(--xwb-leading-body);
+}
+
+@media (max-width: 40rem) {
+  .xwb-custom-masthead { padding: var(--xwb-space-4) var(--xwb-space-6); }
+  .xwb-custom-product { font-size: var(--xwb-type-compact); }
+  .xwb-custom-links { gap: var(--xwb-space-3) var(--xwb-space-6); }
+}
